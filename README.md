@@ -22,5 +22,6 @@ resource| owner
 - [ ] Make website responsive.
 - [ ] Add sitemap + request indexing.
 - [ ] Add project social media preview.
+- [ ] Add requirements.txt file
 
 ### ✔ Done
