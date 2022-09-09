@@ -6,19 +6,18 @@ from bs4 import BeautifulSoup
 
 def getScholarships():
 
-    def cleanName(name):
+    def cleanString(name):
         """Normalize scholarship name by getting rid of special characters
-        like line feed, carriage return, ...
+        like line feed, zero width space, ...
 
         Args:
-            name (string): _description_
+            name (string): original scholarship name directly from html
 
         Returns:
-            string: _description_
+            string: Clean name
         """
         NON_BREAK_SPACE_CHAR = u'\xa0'
         LF_CHAR = u'\n'  # line feed
-        CR_CHAR = u'\r'  # carriage return
         EOL_CHAR = u'\r\n'  # end of line
         ZERO_WIDTH_SPACE = u'\u200b'
 
@@ -47,12 +46,23 @@ def getScholarships():
 
     count = 0
     for row in table_rows:
+        if row.find('td') is None:  # ignore header and footer rows
+            continue
+        if row.find('a') is None:  # ignore empty rows
+            continue
+
+        communique_column = row.find_all('td')[0]
+        closingDate_column = row.find_all('td')[1]
+
+        scholarship_name = cleanString(communique_column.find('a').text)
+        closing_date = cleanString(closingDate_column.text)
+
+        # corner case for "Queen Elizabeth Commonwealth Scholarships for academic Year 2022/2023"
+        if (scholarship_name == ""):
+            scholarship_name = cleanString(communique_column.text)
+
         count += 1
-        if (row.find('td') is not None):  # ignore header and footer
-            if row.find('a') is None:  # ignore empty rows
-                continue
-            name = cleanName(row.find('a').text)
-            if (name != ""):
-                print(count, " ", name, "\n")
+        print(count, " ", scholarship_name, "||", closing_date, "\n")
+
 
 getScholarships()
