@@ -5,29 +5,42 @@ from bs4 import BeautifulSoup
 from schdef import Communique
 from cleanstring import cleanString
 import datetime
+import json
 
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+DATABASE_FILE_PATH =  "data/scrape.json"
+LAST_SCRAPED_COMMUNIQUE = {}
+with open(DATABASE_FILE_PATH) as f:
+    LAST_SCRAPED_COMMUNIQUE = json.load(f)
+# communique since last time scraping was done
 
-cred = credentials.Certificate("scraper/serviceAccountKey.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+def addToTestDB(communique_info):
+    TEST_FILE_PATH =  "data/test.json"
+    with open(TEST_FILE_PATH, 'a', encoding='utf-8') as f:
+        json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
-def getScholarships():
+def updateDatabase(communique_info):
+    with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
+        json.dump(communique_info, f, ensure_ascii=False, indent=4)
+
+def scrapeWebsite():
     HEADERS = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
     }
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
     BASE_URL = 'https://education.govmu.org'
 
-    r = requests.get(URL, headers=HEADERS)
+    firstrowfound = False
+    first_communique = {}
+    global LAST_SCRAPED_COMMUNIQUE
+    r = requests.get(URL, headers=HEADERS, timeout=10)
     if (r.status_code != 200):
         print("ERROR : Failed to request website")
         return
 
     soup = BeautifulSoup(r.text, 'lxml')
+    
     # There are 2 tables on the page. Only the first one is important.
+    # We are scraping the newest rows/scholarships first
     table = soup.find('table')
     table_rows = table.find_all('tr')
 
@@ -39,24 +52,35 @@ def getScholarships():
             continue
 
         current_communique = Communique()
-        current_communique.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
-        format(datetime.datetime.now()))
-
         communique_field = row.find_all('td')[0]
         closingDate_field = row.find_all('td')[1]
 
-        all_anchor_tags = communique_field.find_all('a')
-        for tag in all_anchor_tags:
-            current_communique.urls.append(BASE_URL + tag['href'])
-
         current_communique.title = cleanString(communique_field.find('a').text)
-        current_communique.closingDate = cleanString(closingDate_field.text)
-        db.collection('test').add(current_communique.to_dict())
-
-        # print(current_communique.to_dict())
-        # return
         # corner case for "Queen Elizabeth Commonwealth Scholarships for academic Year 2022/2023"
-        # if (scholarship_name == ""):
-        #     scholarship_name = cleanString(communique_field.text)
+        if (current_communique.title == ""):
+            current_communique.title = cleanString(communique_field.text)
 
-getScholarships()
+        # check if we need to stop scraping
+        if(current_communique.title == LAST_SCRAPED_COMMUNIQUE['title']):
+            updateDatabase(first_communique)
+            break
+        # keep scraping
+        all_anchor_tags = communique_field.find_all('a')
+        urls = []
+        for tag in all_anchor_tags:
+            urls.append(BASE_URL + tag['href'])
+
+        current_communique.urls  = urls
+        current_communique.closingDate = cleanString(closingDate_field.text)
+        
+        count+=1
+        current_communique.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
+        format(datetime.datetime.now()))
+        if not firstrowfound :
+            firstrowfound = True
+            first_communique = current_communique.to_dict()
+
+        print(current_communique.title,"\n")
+    print(count, "new scholarships discovered !")
+
+scrapeWebsite()
