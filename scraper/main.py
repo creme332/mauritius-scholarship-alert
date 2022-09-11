@@ -1,26 +1,28 @@
 #!venv/bin/python3
-
+import datetime
+import json
 import requests
 from bs4 import BeautifulSoup
 from schdef import Communique
 from cleanstring import cleanString
-import datetime
-import json
 
-DATABASE_FILE_PATH =  "data/scrape.json"
-LAST_SCRAPED_COMMUNIQUE = {}
+DATABASE_FILE_PATH = "data/scrape.json"
+LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
+
 with open(DATABASE_FILE_PATH) as f:
     LAST_SCRAPED_COMMUNIQUE = json.load(f)
-# communique since last time scraping was done
 
-def addToTestDB(communique_info):
-    TEST_FILE_PATH =  "data/test.json"
-    with open(TEST_FILE_PATH, 'a', encoding='utf-8') as f:
-        json.dump(communique_info, f, ensure_ascii=False, indent=4)
+# For testing purposes
+# def addToTestDB(communique_info):
+#     TEST_FILE_PATH =  "data/test.json"
+#     with open(TEST_FILE_PATH, 'a', encoding='utf-8') as f:
+#         json.dump(communique_info, f, ensure_ascii=False, indent=4)
+
 
 def updateDatabase(communique_info):
     with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
         json.dump(communique_info, f, ensure_ascii=False, indent=4)
+
 
 def scrapeWebsite():
     HEADERS = {
@@ -32,13 +34,14 @@ def scrapeWebsite():
     firstrowfound = False
     first_communique = {}
     global LAST_SCRAPED_COMMUNIQUE
+
     r = requests.get(URL, headers=HEADERS, timeout=10)
     if (r.status_code != 200):
         print("ERROR : Failed to request website")
         return
 
     soup = BeautifulSoup(r.text, 'lxml')
-    
+
     # There are 2 tables on the page. Only the first one is important.
     # We are scraping the newest rows/scholarships first
     table = soup.find('table')
@@ -60,27 +63,29 @@ def scrapeWebsite():
         if (current_communique.title == ""):
             current_communique.title = cleanString(communique_field.text)
 
-        # check if we need to stop scraping
-        if(current_communique.title == LAST_SCRAPED_COMMUNIQUE['title']):
+        # check if we are done scraping all new communique
+        if (current_communique.title == LAST_SCRAPED_COMMUNIQUE['title']):
             updateDatabase(first_communique)
             break
+
         # keep scraping
         all_anchor_tags = communique_field.find_all('a')
         urls = []
         for tag in all_anchor_tags:
             urls.append(BASE_URL + tag['href'])
 
-        current_communique.urls  = urls
+        current_communique.urls = urls
         current_communique.closingDate = cleanString(closingDate_field.text)
-        
-        count+=1
         current_communique.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
-        format(datetime.datetime.now()))
-        if not firstrowfound :
+                                        format(datetime.datetime.now()))
+        count += 1
+
+        if not firstrowfound:
             firstrowfound = True
             first_communique = current_communique.to_dict()
 
-        print(current_communique.title,"\n")
+        print(current_communique.title, "\n")
     print(count, "new scholarships discovered !")
+
 
 scrapeWebsite()
