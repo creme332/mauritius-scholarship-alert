@@ -8,9 +8,6 @@ from cleanstring import cleanString
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQUE
-# Initialise LAST_SCRAPED_COMMUNIQUE
-with open(DATABASE_FILE_PATH) as f:
-    LAST_SCRAPED_COMMUNIQUE = json.load(f)
 
 # For testing purposes
 # def addToTestDB(communique_info):
@@ -18,29 +15,42 @@ with open(DATABASE_FILE_PATH) as f:
 #     with open(TEST_FILE_PATH, 'a', encoding='utf-8') as f:
 #         json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
+def main():
+    global LAST_SCRAPED_COMMUNIQUE
+    # Initialise LAST_SCRAPED_COMMUNIQUE
+    with open(DATABASE_FILE_PATH) as f:
+        LAST_SCRAPED_COMMUNIQUE = json.load(f)
+
+    # call website
+    HEADERS = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
+    }
+    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
+
+    try:
+        r = requests.get(URL, headers=HEADERS, timeout=100)
+    except requests.exceptions.Timeout as e:
+    # we didn't get a reply
+        print("Request timed out!\nDetails:", e)
+    else:
+        if (r.status_code == 200): # valid response
+            scrapeWebsite(r.text)
+            return
+        print("ERROR : Failed to request website : {r.status_code}")
+
 
 def updateDatabase(communique_info):
     with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
         json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
 
-def scrapeWebsite():
-    HEADERS = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
-    }
-    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    BASE_URL = 'https://education.govmu.org'
-
+def scrapeWebsite(RESPONSETEXT):
+    BASE_URL = 'https://education.govmu.org' # base url for pdf docs
     firstrowfound = False
     first_communique = {}
     global LAST_SCRAPED_COMMUNIQUE
 
-    r = requests.get(URL, headers=HEADERS, timeout=10)
-    if (r.status_code != 200):
-        print("ERROR : Failed to request website")
-        return
-
-    soup = BeautifulSoup(r.text, 'lxml')
+    soup = BeautifulSoup(RESPONSETEXT, 'lxml')
 
     # There are 2 tables on the page. Only the first one is important.
     # We are scraping the newest rows/scholarships first
@@ -90,5 +100,4 @@ def scrapeWebsite():
         # Send email
     print(count, "new scholarships discovered !")
 
-
-scrapeWebsite()
+main()
