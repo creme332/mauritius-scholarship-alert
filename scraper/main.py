@@ -6,9 +6,9 @@ from bs4 import BeautifulSoup
 from schdef import Communique
 from cleanstring import cleanString
 
-DATABASE_FILE_PATH = "data/scrape.json"
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
-
+DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQUE
+# Initialise LAST_SCRAPED_COMMUNIQUE
 with open(DATABASE_FILE_PATH) as f:
     LAST_SCRAPED_COMMUNIQUE = json.load(f)
 
@@ -65,7 +65,9 @@ def scrapeWebsite():
 
         # check if we are done scraping all new communique
         if (current_communique.title == LAST_SCRAPED_COMMUNIQUE['title']):
-            updateDatabase(first_communique)
+            if(first_communique != {}):
+                # we found at least 1 new scholarship
+                updateDatabase(first_communique)
             break
 
         # keep scraping
@@ -85,6 +87,7 @@ def scrapeWebsite():
             first_communique = current_communique.to_dict()
 
         print(current_communique.title, "\n")
+        # Send email
     print(count, "new scholarships discovered !")
 
 
