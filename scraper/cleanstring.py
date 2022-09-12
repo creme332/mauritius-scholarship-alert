@@ -1,3 +1,5 @@
+#!venv/bin/python3
+
 def cleanString(name):
     """Normalize scholarship name by getting rid of special characters
     like line feed, zero width space, ...
@@ -21,3 +23,7 @@ def cleanString(name):
     )
     return name.strip()
     # return name.strip().split(' ')
+
+if __name__ == "__main__":
+    test = ['\u200bSTATE', 'OF', 'MAURITIUS', 'POSTGRADUATE', 'SCHOLARSHIP', 'SCHEME', '2022/2023']
+    print(cleanString(' '.join(test)))

@@ -88,4 +88,5 @@ def scrapeWebsite(RESPONSETEXT):
         sendEmail(current_communique.title, getPDFtext(urls[0]),'c34560814@gmail.com')
     print(count, "new scholarships discovered !")
 
-main()
+if __name__ == "__main__":
+    main()

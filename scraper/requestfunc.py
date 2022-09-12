@@ -1,3 +1,5 @@
+#!venv/bin/python3
+
 import requests
 def makeRequest(URL):
     HEADERS = {
@@ -12,3 +14,6 @@ def makeRequest(URL):
         if (r.status_code == 200): # valid response
             return r
         raise SystemExit("Invalid status code when requesting PDF : {r.status_code}", "\n URL : {URL}")
+
+if __name__ == "__main__":
+    makeRequest('hello.xyz')
