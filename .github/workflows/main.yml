@@ -26,7 +26,7 @@ jobs:
           
       - name: execute py script 
         env:
-          SOME_SECRET: ${{ secrets.SOME_SECRET }}
+          EMAIL_PASSCODE: ${{ secrets.EMAIL_PASSCODE }}
         run: python scraper/main.py # execute main.py from scraper folder
           
       - name: commit files
