@@ -34,15 +34,15 @@ resource| owner
 
 # 🔨 To-Do
 - [ ] Save all scraped data to firestore
-- [ ] Use Github Workflow for automatic scraping. [Blog here](https://yasoob.me/posts/github-actions-web-scraper-schedule-tutorial/)
-- limit access to api with this [method](https://www.youtube.com/watch?v=cRFM5AcfcPQ&ab_channel=InfoTechWARforCoding)
+- [ ] Try to reduce execution time : include all code in one file, remove unused libraries, caching, optimise program, ...
 
-
+- [ ] be more stringent when comparing communique
 - [ ] Build an API.
 
 - [ ] Make website responsive.
 - [ ] Add sitemap + request indexing.
 - [ ] Add project social media preview.
 - [x] Add requirements.txt file
-
+- [x] Use Github Workflow for automatic scraping. [Blog here](https://yasoob.me/posts/github-actions-web-scraper-schedule-tutorial/)
+- limit access to api with this [method](https://www.youtube.com/watch?v=cRFM5AcfcPQ&ab_channel=InfoTechWARforCoding)
 ### ✔ Done
