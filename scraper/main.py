@@ -1,11 +1,12 @@
 #!venv/bin/python3
 import datetime
 import json
-import requests
 from bs4 import BeautifulSoup
 from schdef import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
+from pdfreader import getPDFtext
+from requestfunc import makeRequest
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQUE
@@ -15,20 +16,6 @@ DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQU
 #     TEST_FILE_PATH =  "data/test.json"
 #     with open(TEST_FILE_PATH, 'a', encoding='utf-8') as f:
 #         json.dump(communique_info, f, ensure_ascii=False, indent=4)
-
-def makeRequest(URL):
-    HEADERS = {
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
-    }
-    TIMEOUT = 100 # allow at most 100s to make request
-    try:
-        r = requests.get(URL, headers=HEADERS, timeout=TIMEOUT)
-    except Exception as e:
-        raise SystemExit(e)
-    else:
-        if (r.status_code == 200): # valid response
-            return r
-        raise SystemExit("Invalid status code when requesting PDF : {r.status_code}", "\n URL : {URL}")
 
 def main():
     global LAST_SCRAPED_COMMUNIQUE
@@ -98,7 +85,7 @@ def scrapeWebsite(RESPONSETEXT):
             first_communique = current_communique.to_dict()
 
         print(current_communique.title, "\n")
-        sendEmail(current_communique.title, current_communique.to_dict(),'c34560814@gmail.com')
+        sendEmail(current_communique.title, getPDFtext(urls[0]),'c34560814@gmail.com')
     print(count, "new scholarships discovered !")
 
 main()

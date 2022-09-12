@@ -1,7 +1,7 @@
 #!venv/bin/python3
 import PyPDF2
 import io
-from main import makeRequest
+from requestfunc import makeRequest
 import datetime
 
 PDF_text = ""
@@ -32,5 +32,5 @@ def getKeywordsFromPDF(PDF_text):
             matched_keywords.append(keyword)
     return matched_keywords
 
-URL = 'https://education.govmu.org/Documents/2022/scholarship/Communique-UK%20Commonwealth.doc.pdf'
-print(getPDFtext(URL))
+# URL = 'https://education.govmu.org/Documents/2022/scholarship/Communique-UK%20Commonwealth.doc.pdf'
+# print(getPDFtext(URL))
