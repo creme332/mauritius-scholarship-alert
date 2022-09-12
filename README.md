@@ -1,15 +1,16 @@
 # mauritius-scholarship-alert
 
- Stay up-to-date with the latest scholarships posted on govmu website.
+Stay up-to-date with the latest scholarships for Mauritian students.
 
 ![GIF](gifs/gif1.gif)
 
 [▶ Live Preview]()
 
 # 🚀Features
-- Receive notification as soon as a new scholarship drops.
+- Receive an email notification each time a new scholarship drops.
 - Receive reminder a couple of days before closing date.
 - Filtering options
+- Asynchronous programming, caching dependencies to speed up Github Actions
 
 # How it works
 
@@ -34,10 +35,11 @@ resource| owner
 
 # 🔨 To-Do
 - [ ] Save all scraped data to firestore
-- [ ] Try to reduce execution time : include all code in one file, remove unused libraries, caching, optimise program, ...
+- [ ] Try to reduce execution time : include all code in one file, remove unused libraries, caching, optimise program, asyncio ...
 
 - [ ] be more stringent when comparing communique
 - [ ] Build an API.
+pip cache is not found
 
 - [ ] Make website responsive.
 - [ ] Add sitemap + request indexing.
