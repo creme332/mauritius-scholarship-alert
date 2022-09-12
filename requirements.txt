@@ -1,4 +1,7 @@
-beautifulsoup4==4.11.1
-# PyPDF2==2.10.6
+# for scraping 
 requests==2.28.1
+beautifulsoup4==4.11.1
 lxml==4.9.1
+# for sending email
+PyPDF2==2.10.6
+redmail==0.4.1      
