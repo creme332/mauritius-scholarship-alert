@@ -1,4 +1,4 @@
-# mauritius-scholarship-alert
+# 🔔 mauritius-scholarship-alert
 
 Stay up-to-date with the latest scholarships for Mauritian students.
 
@@ -25,26 +25,21 @@ Stay up-to-date with the latest scholarships for Mauritian students.
 - You will have to manually check the website for updates.
 - Inconsistent capitalisation.
 
-# 📌 Attributions
-Resource | Source
----|---
-resource| owner
-
 # Assumptions when scraping 
 - The first anchor tag in each row is the scholarship name.  (This is not true for Queen Elizabeth)
 
 # 🔨 To-Do
-- [ ] Save all scraped data to firestore
-- [ ] Try to reduce execution time : include all code in one file, remove unused libraries, caching, optimise program, asyncio ...
-
+- [ ] Add above assumption to code
+- [ ] Add unit tests
+- [ ] Save all scraped data to Firestore
+- [ ] Try to reduce execution time : remove unused libraries, caching, optimise program, asyncio ...
+- [ ] Delete virtual env from github
 - [ ] be more stringent when comparing communique
-- [ ] Build an API.
-pip cache is not found
 
-- [ ] Make website responsive.
+- [ ] Create a registration form so that anyone can subscribe for updates.
 - [ ] Add sitemap + request indexing.
 - [ ] Add project social media preview.
-- [x] Add requirements.txt file
-- [x] Use Github Workflow for automatic scraping. [Blog here](https://yasoob.me/posts/github-actions-web-scraper-schedule-tutorial/)
-- limit access to api with this [method](https://www.youtube.com/watch?v=cRFM5AcfcPQ&ab_channel=InfoTechWARforCoding)
+
 ### ✔ Done
+- [x] Add requirements.txt file
+- [x] Use Github Actions to automate scraping. [Read this](https://yasoob.me/posts/github-actions-web-scraper-schedule-tutorial/).
