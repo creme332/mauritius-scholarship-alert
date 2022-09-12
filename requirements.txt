@@ -1,5 +1,5 @@
 # python3 -m  pipreqs.pipreqs . --force
-
+# use  pip show Jinja2 to check package version
 python-dotenv==0.21.0
 
 # for scraping 
