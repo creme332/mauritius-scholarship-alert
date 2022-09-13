@@ -6,11 +6,38 @@ from schdef import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
 from pdfreader import getPDFtext
-from requestfunc import makeRequest
+from requestfunc import makeRequest, getResponses
+
+import cProfile
+import pstats
+import asyncio
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 # file containing LAST_SCRAPED_COMMUNIQUE
 DATABASE_FILE_PATH = "data/scrape.json"
+
+
+def foo(pdf_urls, email_titles):
+    responses = asyncio.run(getResponses(pdf_urls))
+    all_pdfs = []
+    skipped_responses = []
+
+    for res in responses:
+        if res.status_code == 200:
+            all_pdfs.append(getPDFtext(res))
+        else:
+            all_pdfs.append("")
+            skipped_responses.append(res)
+
+    if (len(skipped_responses) > 0):
+        print("Skipped responeses\n", "\n".join(skipped_responses))
+    return
+    # send an email to myself
+    for i in range(0, len(email_titles)):
+        if (responses[i].status_code == 200):
+            print(email_titles[i])
+            # sendEmail(email_titles[i], all_pdfs[i], 'c34560814@gmail.com')
+            # await asyncio.sleep(1)
 
 
 def main():
@@ -21,10 +48,14 @@ def main():
 
     # scrape website
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    scrapeWebsite(makeRequest(URL).text)
+    r = scrapeWebsite(makeRequest(URL).text)
+    email_titles = r[1]
+    pdf_urls = r[0]
+    foo(pdf_urls, email_titles)
 
 
 def updateDatabase(communique_info):
+    return
     with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
         json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
@@ -41,7 +72,10 @@ def scrapeWebsite(RESPONSETEXT):
     # The first table contains communiques sorted by date (earliest first)
     table = soup.find('table')
     table_rows = table.find_all('tr')
+
     newScholarshipsList = []  # list of new scholarships discovered
+    pdf_urls = []  # pdf urls which must be requested
+    email_titles = []
 
     for row in table_rows:
         if row.find('td') is None:  # ignore header and footer rows
@@ -72,6 +106,9 @@ def scrapeWebsite(RESPONSETEXT):
         for tag in all_anchor_tags:
             urls.append(BASE_URL + tag['href'])
 
+        pdf_urls.append(urls[0])
+        email_titles.append(current_communique.title)
+
         current_communique.urls = urls
         current_communique.closingDate = cleanString(closingDate_field.text)
         current_communique.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
@@ -82,11 +119,9 @@ def scrapeWebsite(RESPONSETEXT):
             firstrowfound = True
             first_communique = current_communique.to_dict()
 
-        # sendEmail(current_communique.title, getPDFtext(
-        #     urls[0]), 'c34560814@gmail.com')
     # print updates
     print(len(newScholarshipsList), "new scholarships discovered !\n")
-    print("\n\n".join(newScholarshipsList))
+    # print("\n\n".join(newScholarshipsList))
 
     # update database only if needed
     if (LAST_SCRAPED_COMMUNIQUE == {}):  # this is our first time scraping
@@ -96,7 +131,15 @@ def scrapeWebsite(RESPONSETEXT):
                 first_communique['title'] != LAST_SCRAPED_COMMUNIQUE['title']):
             # we have found at least 1 new scholarship
             updateDatabase(first_communique)
+    return [pdf_urls, email_titles]
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    with cProfile.Profile() as pr:
+        main()
+
+    stats = pstats.Stats(pr)
+    stats.sort_stats(pstats.SortKey.TIME)
+    stats.print_stats()
+    # stats.dump_stats(filename='needs_profiling.prof')
