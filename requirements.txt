@@ -6,6 +6,7 @@ python-dotenv==0.21.0
 requests==2.28.1
 beautifulsoup4==4.11.1
 lxml==4.9.1
+httpx==0.23.0     
 
 # for sending email
 PyPDF2==2.10.6
