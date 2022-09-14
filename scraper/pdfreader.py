@@ -4,6 +4,14 @@ import io
 from requestfunc import makeRequest
 
 def getPDFtext(response):
+    """_summary_
+
+    Args:
+        response (?): HTML response after requesting a URL
+
+    Returns:
+        string: A string with all text content in pdf
+    """
     PDF_text = ""
 
     with io.BytesIO(response.content) as open_pdf_file:
@@ -15,20 +23,32 @@ def getPDFtext(response):
             PDF_text += page.extract_text()
     return PDF_text
 
-def getKeywordsFromPDF(PDF_text):
-    TEST_KEYWORDS = ['undergraduate',
-                     'postgraduate', 'bachelor', "master’s",
-                     'phd']
-    matched_keywords = []
-    response = ""
-    # print(all_words)
-    # find matching keywords
-    for keyword in TEST_KEYWORDS:
-        if keyword.lower() in PDF_text.lower():
-            matched_keywords.append(keyword)
-    return matched_keywords
+def validPDF(PDF_text):
+    """Returns True if pdf contains at least 1 keyword from keywords.txt. 
+    If text file is empty, always return true.
+
+    Args:
+        PDF_text (string): A string of all text content in pdf
+
+    Returns:
+        boolean
+    """
+    # Replace U+2019 char with '
+    PDF_text = PDF_text.replace('’',"'")
+
+    line_count = 0
+    with open('data/keywords.txt', 'r') as f:
+        for keyword in f:
+            line_count+=1
+            if keyword.rstrip('\n').lower() in PDF_text.lower().split(' '):
+                return True
+    # print("number of lines =",line_count)
+    if line_count == 0 :
+        return True
+    return False
 
 
 if __name__ == "__main__":
     URL = 'https://education.govmu.org/Documents/2022/scholarship/Communique-UK%20Commonwealth.doc.pdf'
-    print(getPDFtext(makeRequest(URL)).split('\n \n')[1])
+    txt = getPDFtext(makeRequest(URL))
+    print(validPDF(txt))

@@ -5,12 +5,14 @@ import json
 import asyncio
 from time import sleep
 from bs4 import BeautifulSoup
+
 # my modules
 from schdef import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
-from pdfreader import getPDFtext
+from pdfreader import getPDFtext, validPDF
 from requestfunc import makeRequest, getResponses
+
 # to measure code performance
 import cProfile
 import pstats
@@ -50,7 +52,7 @@ def main():
 
     # send an email to myself
     for i in range(0, len(email_titles)):
-        if (responses[i].status_code == 200):
+        if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
             sendEmail(email_titles[i], all_pdfs[i])
             sleep(1)
 
@@ -120,7 +122,7 @@ def scrapeWebsite(RESPONSETEXT):
             first_communique = current_communique.to_dict()
 
     # print updates
-    print(len(newScholarshipsList), "new scholarships discovered !\n")
+    print(len(newScholarshipsList), "new scholarships found on website !\n")
     print("\n\n".join(newScholarshipsList))
 
     # update database only if needed
