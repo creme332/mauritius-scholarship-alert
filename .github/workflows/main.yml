@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       # https://github.com/actions/setup-python#caching-packages-dependencies
-      - name: setup python and cache dependencies
+      - name: setup python with pip cache
         uses: actions/setup-python@v4
         with:
           python-version: '3.9' 
@@ -27,6 +27,7 @@ jobs:
       - name: execute py script 
         env:
           EMAIL_PASSCODE: ${{ secrets.EMAIL_PASSCODE }}
+          SENDER_EMAIL_ADDRESSS: ${{ secrets.SENDER_EMAIL_ADDRESSS }}
         run: python scraper/main.py # execute main.py from scraper folder
           
       - name: commit files
@@ -35,7 +36,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A
           timestamp=$(date -u)
-          git diff-index --quiet HEAD || (git commit -a -m "Last check : ${timestamp}" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "Last update : ${timestamp}" --allow-empty)
           
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
