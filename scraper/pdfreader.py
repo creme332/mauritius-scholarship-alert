@@ -3,7 +3,6 @@ import PyPDF2
 import io
 from requestfunc import makeRequest
 
-
 def getPDFtext(response):
     PDF_text = ""
 
@@ -15,7 +14,6 @@ def getPDFtext(response):
             page = reader.pages[pageNum]
             PDF_text += page.extract_text()
     return PDF_text
-
 
 def getKeywordsFromPDF(PDF_text):
     TEST_KEYWORDS = ['undergraduate',

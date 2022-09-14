@@ -1,6 +1,8 @@
+# firestore API info
 serviceAccountKey.json
+
+# vscode IDE files
 .vscode
-venv/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

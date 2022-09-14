@@ -1,16 +1,19 @@
 #!venv/bin/python3
+
 import datetime
 import json
+import asyncio
+from time import sleep
 from bs4 import BeautifulSoup
+# my modules
 from schdef import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
 from pdfreader import getPDFtext
 from requestfunc import makeRequest, getResponses
-
+# to measure code performance
 import cProfile
 import pstats
-import asyncio
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 # file containing LAST_SCRAPED_COMMUNIQUE
@@ -31,31 +34,30 @@ def foo(pdf_urls, email_titles):
 
     if (len(skipped_responses) > 0):
         print("Skipped responeses\n", "\n".join(skipped_responses))
-    return
+
     # send an email to myself
     for i in range(0, len(email_titles)):
         if (responses[i].status_code == 200):
-            print(email_titles[i])
-            # sendEmail(email_titles[i], all_pdfs[i], 'c34560814@gmail.com')
-            # await asyncio.sleep(1)
+            sendEmail(email_titles[i], all_pdfs[i])
+            sleep(1)
 
 
 def main():
-    global LAST_SCRAPED_COMMUNIQUE
+
     # Initialise LAST_SCRAPED_COMMUNIQUE
+    global LAST_SCRAPED_COMMUNIQUE
     with open(DATABASE_FILE_PATH) as f:
         LAST_SCRAPED_COMMUNIQUE = json.load(f)
 
-    # scrape website
+    # scrape website to obtain communique titles and main pdf urls
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    r = scrapeWebsite(makeRequest(URL).text)
-    email_titles = r[1]
-    pdf_urls = r[0]
+    return_values = scrapeWebsite(makeRequest(URL).text)
+    email_titles = return_values[1]
+    pdf_urls = return_values[0]
     foo(pdf_urls, email_titles)
 
 
 def updateDatabase(communique_info):
-    return
     with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
         json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
@@ -121,7 +123,7 @@ def scrapeWebsite(RESPONSETEXT):
 
     # print updates
     print(len(newScholarshipsList), "new scholarships discovered !\n")
-    # print("\n\n".join(newScholarshipsList))
+    print("\n\n".join(newScholarshipsList))
 
     # update database only if needed
     if (LAST_SCRAPED_COMMUNIQUE == {}):  # this is our first time scraping
@@ -142,4 +144,3 @@ if __name__ == "__main__":
     stats = pstats.Stats(pr)
     stats.sort_stats(pstats.SortKey.TIME)
     stats.print_stats()
-    # stats.dump_stats(filename='needs_profiling.prof')
