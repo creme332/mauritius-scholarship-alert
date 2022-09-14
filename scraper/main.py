@@ -19,12 +19,25 @@ LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 # file containing LAST_SCRAPED_COMMUNIQUE
 DATABASE_FILE_PATH = "data/scrape.json"
 
+def main():
 
-def foo(pdf_urls, email_titles):
+    # Initialise LAST_SCRAPED_COMMUNIQUE
+    global LAST_SCRAPED_COMMUNIQUE
+    with open(DATABASE_FILE_PATH) as f:
+        LAST_SCRAPED_COMMUNIQUE = json.load(f)
+
+    # scrape website to obtain communique titles and main pdf urls
+    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
+    return_values = scrapeWebsite(makeRequest(URL).text)
+    email_titles = return_values[1]
+    pdf_urls = return_values[0]
+
+    # request pdfs
     responses = asyncio.run(getResponses(pdf_urls))
     all_pdfs = []
     skipped_responses = []
 
+    # get pdf text from each response
     for res in responses:
         if res.status_code == 200:
             all_pdfs.append(getPDFtext(res))
@@ -40,21 +53,6 @@ def foo(pdf_urls, email_titles):
         if (responses[i].status_code == 200):
             sendEmail(email_titles[i], all_pdfs[i])
             sleep(1)
-
-
-def main():
-
-    # Initialise LAST_SCRAPED_COMMUNIQUE
-    global LAST_SCRAPED_COMMUNIQUE
-    with open(DATABASE_FILE_PATH) as f:
-        LAST_SCRAPED_COMMUNIQUE = json.load(f)
-
-    # scrape website to obtain communique titles and main pdf urls
-    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    return_values = scrapeWebsite(makeRequest(URL).text)
-    email_titles = return_values[1]
-    pdf_urls = return_values[0]
-    foo(pdf_urls, email_titles)
 
 
 def updateDatabase(communique_info):
