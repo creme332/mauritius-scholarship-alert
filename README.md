@@ -49,8 +49,19 @@ pip install -r requirements.txt
 EMAIL_PASSCODE = "your gmail app password"
 SENDER_EMAIL_ADDRESS = "your gmail email address"
 ```
-
 - Execute `main.py` function.
+
+## Filtering scholarships
+By default filtering option is turned off. To turn on, enter keywords in `keywords.txt`. You will only be notified of scholarships matching **at least one of the keywords**.
+
+For example, to be notified of only master's scholarships to the UK, your `keywords.txt` should look like this :
+```
+master's
+uk
+```
+Keywords may include country name, degree level, ...
+
+Keep `keywords.txt` empty to disable filtering.
 
 # 🤚 Limitations
 - At most 2000 emails per day and 3000 recipients per day.
@@ -62,29 +73,28 @@ For updated information about quotas :
 
 # 🙋‍♂️Disclaimer
 - This project is not affiliated with the Ministry of Education of Mauritius. 
-- A major change to the HTML code of the website will cause the program to crash.
+- A major change to the HTML code of the website may cause the program to crash.
 
-For reference purposes, here's how the website should be structured for my program to work :
+For reference purposes, here's how the website was structured at the time when my program was working properly :
 
-![screenshot of scholarship website](govmuwebsite.png)
+![screenshot of scholarship website](assets/govmuwebsite.png)
 
 # 📃License
  This project uses the MIT license.
 
 # 🔨 To-Do
-- [ ] be more stringent when comparing communique
-- [ ] Add unit tests
-- [ ] Improve email template
+- [ ] Remind me of approaching closing dates.
+- [ ] Add unit tests + possibly a separate workflow
 - [ ] Save all scraped data to Firestore
 - [ ] Create a registration form so that anyone can subscribe for updates.
 
 ### ✔ Done
+- [x] Option to filter scholarships by type
 - [x] Add project social media preview.
 - [x] Add automatic build passing/failed shield
--[x]Create new github secret for email
+- [x] Create new github secret for email
 - [x] Try to reduce execution time : remove unused libraries, caching, optimise program, asyncio ...
-- [x] deal with case where lastscrapedcommunique is empty
+- [x] Deal with case where lastscrapedcommunique is empty
 - [x] Delete virtual env from github
-- [x] Add above assumption to code
 - [x] Add requirements.txt file
 - [x] Use Github Actions to automate scraping. [Read this](https://yasoob.me/posts/github-actions-web-scraper-schedule-tutorial/).
