@@ -8,24 +8,17 @@ Get notified by email each time the Ministry of Education of Mauritius posts a n
 
 # 🚀Features
 - Receive an email notification at most 1 day after a new scholarship is posted.
+- Asynchronous programming to speed up fetching of PDFs on website.
 <!-- - Receive a reminder a couple of days before the closing date of all scholarships.
 - Option to filter scholarships by type. -->
-- Asynchronous programming to speed up fetching of PDFs on website.
-
-# 🙋‍♂️Disclaimer
-- This project is not affiliated with the Ministry of Education of Mauritius. 
-- A major change to the HTML code of the website may cause the program to malfunction.
 
 # ⚙ How it works
 - Github Actions is used to automatically run `main.py` script every day.
  - The program scrapes the scholarship website and checks for any new communique. 
+ - Newly discovered communiques are sent by email to you. Your own email address will be used to send you emails.
  - The most recent commnique found is then saved in `scrape.json` for future reference.
- 
 
-# 🤷‍♂️Why not use the website directly ?
-- No scholarship filtering options available.
-- You will have to manually check the website for updates.
-- Website has inconsistent HTML. (erratic line breaks, LF/CR chars, ...)
+ ![Example of email](assets/emailgif.gif)
 
 # ✍Usage
 ## Run with Github Actions 
@@ -42,7 +35,7 @@ Get notified by email each time the Ministry of Education of Mauritius posts a n
 ## Run locally without Github Actions
 - Clone repo.
 
-```
+```bash
 git clone git@github.com:creme332/mauritius-scholarship-alert.git
 ```
 
@@ -52,15 +45,12 @@ pip install -r requirements.txt
 ```
 
 - Create a `.env` file with the following contents :
-```
+```bash
 EMAIL_PASSCODE = "your gmail app password"
 SENDER_EMAIL_ADDRESS = "your gmail email address"
 ```
 
 - Execute `main.py` function.
-
-
-If you want to receive the current list of all communique on the site, set the contents of `scrape.json` to `{}` and run `main.py`. Please note that you will receive 50+ emails at once.
 
 # 🤚 Limitations
 - At most 2000 emails per day and 3000 recipients per day.
@@ -69,6 +59,14 @@ If you want to receive the current list of all communique on the site, set the c
 For updated information about quotas :
 - [Github Actions Quotas](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions)
 - [Gmail Quotas](https://support.google.com/a/answer/166852?hl=en)
+
+# 🙋‍♂️Disclaimer
+- This project is not affiliated with the Ministry of Education of Mauritius. 
+- A major change to the HTML code of the website will cause the program to crash.
+
+For reference purposes, here's how the website should be structured for my program to work :
+
+![screenshot of scholarship website](govmuwebsite.png)
 
 # 📃License
  This project uses the MIT license.
