@@ -1,7 +1,7 @@
 #!venv/bin/python3
 import PyPDF2
 import io
-from requestfunc import makeRequest
+from src.requestfunction import makeRequest
 
 def getPDFtext(response):
     """_summary_

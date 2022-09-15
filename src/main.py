@@ -7,11 +7,11 @@ from time import sleep
 from bs4 import BeautifulSoup
 
 # my modules
-from schdef import Communique
+from src.communiqueclass import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
 from pdfreader import getPDFtext, validPDF
-from requestfunc import makeRequest, getResponses
+from src.requestfunction import makeRequest, getResponses
 
 # to measure code performance
 import cProfile
@@ -50,7 +50,7 @@ def main():
     if (len(skipped_responses) > 0):
         print("Skipped responeses\n", "\n".join(skipped_responses))
 
-    # send an email to myself
+    # send emails to myself
     EMAIL_LIMIT = 5 # max number of emails that can be sent when main.py is run once.
     for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
         if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
@@ -135,7 +135,9 @@ def scrapeWebsite(RESPONSETEXT):
             updateDatabase(first_communique)
     return [pdf_urls, email_titles]
 
-def reminder(RESPONSETEXT):
+def reminder(RESPONSETEXT, scList):
+    if len(scList)==0:
+        return
     soup = BeautifulSoup(RESPONSETEXT, 'lxml')
     table = soup.find('table')
     table_rows = table.find_all('tr')
@@ -149,14 +151,10 @@ def reminder(RESPONSETEXT):
         communique_field = row.find_all('td')[0]
         closingDate_field = row.find_all('td')[1]
 
-        current_communique.title = cleanString(communique_field.
-                                               find('a').text)
+        current_communique.closingDate = cleanString(closingDate_field.text)
+        current_communique.title = cleanString(communique_field.find('a').text)
         if (current_communique.title == ""):
             current_communique.title = cleanString(communique_field.text)
-
-        current_communique.closingDate = cleanString(closingDate_field.text)
-        d = (cleanString(current_communique.closingDate))
-        print(d,"->",dparser.parse(d,fuzzy=True))
 
 if __name__ == "__main__":
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
