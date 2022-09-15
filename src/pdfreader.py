@@ -1,7 +1,7 @@
 #!venv/bin/python3
 import PyPDF2
 import io
-from src.requestfunction import makeRequest
+from requestfunction import makeRequest
 
 def getPDFtext(response):
     """_summary_
@@ -40,7 +40,7 @@ def validPDF(PDF_text):
     with open('data/keywords.txt', 'r') as f:
         for keyword in f:
             line_count+=1
-            if keyword.rstrip('\n').lower() in PDF_text.lower().split(' '):
+            if keyword.strip().lower() in PDF_text.lower().split(' '):
                 return True
     # print("number of lines =",line_count)
     if line_count == 0 :

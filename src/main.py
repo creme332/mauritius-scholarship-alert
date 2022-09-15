@@ -11,7 +11,7 @@ from src.communiqueclass import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
 from pdfreader import getPDFtext, validPDF
-from src.requestfunction import makeRequest, getResponses
+from requestfunction import makeRequest, getResponses
 
 # to measure code performance
 import cProfile
