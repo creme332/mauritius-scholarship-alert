@@ -5,6 +5,17 @@ from dotenv import load_dotenv, find_dotenv
 import datetime
 
 def sendEmail(emailSubject, emailBodyhtml):
+    """Send an email to yourseld
+
+    Args:
+        emailSubject (_type_): _description_
+        emailBodyhtml (_type_): _description_
+
+    Raises:
+        SystemExit: SENDER_EMAIL_ADDRESS not found
+        SystemExit: EMAIL_PASSCODE not found
+        SystemExit: Sending email was unsuccessful
+    """
     # setup credentials
     load_dotenv(find_dotenv())
     if(os.getenv('SENDER_EMAIL_ADDRESS') is None):
