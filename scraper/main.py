@@ -31,7 +31,7 @@ def main():
     # scrape website to obtain communique titles and main pdf urls
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
     return_values = scrapeWebsite(makeRequest(URL).text)
-    email_titles = return_values[1]
+    email_titles = return_values[1] # new communique title 
     pdf_urls = return_values[0]
 
     # request pdfs
@@ -51,10 +51,10 @@ def main():
         print("Skipped responeses\n", "\n".join(skipped_responses))
 
     # send an email to myself
-    for i in range(0, len(email_titles)):
+    EMAIL_LIMIT = 5 # max number of emails that can be sent when main.py is run once.
+    for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
         if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
             sendEmail(email_titles[i], all_pdfs[i])
-            sleep(1)
 
 
 def updateDatabase(communique_info):
@@ -135,12 +135,36 @@ def scrapeWebsite(RESPONSETEXT):
             updateDatabase(first_communique)
     return [pdf_urls, email_titles]
 
+def reminder(RESPONSETEXT):
+    soup = BeautifulSoup(RESPONSETEXT, 'lxml')
+    table = soup.find('table')
+    table_rows = table.find_all('tr')
+
+    for row in table_rows:
+        # ignore header, footer, empty rows
+        if (row.find('td') is None) or (row.find('a') is None):  
+            continue
+
+        current_communique = Communique()
+        communique_field = row.find_all('td')[0]
+        closingDate_field = row.find_all('td')[1]
+
+        current_communique.title = cleanString(communique_field.
+                                               find('a').text)
+        if (current_communique.title == ""):
+            current_communique.title = cleanString(communique_field.text)
+
+        current_communique.closingDate = cleanString(closingDate_field.text)
+        d = (cleanString(current_communique.closingDate))
+        print(d,"->",dparser.parse(d,fuzzy=True))
 
 if __name__ == "__main__":
+    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
+    reminder(makeRequest(URL).text)
     # main()
-    with cProfile.Profile() as pr:
-        main()
+    # with cProfile.Profile() as pr:
+    #     main()
 
-    stats = pstats.Stats(pr)
-    stats.sort_stats(pstats.SortKey.TIME)
-    stats.print_stats()
+    # stats = pstats.Stats(pr)
+    # stats.sort_stats(pstats.SortKey.TIME)
+    # stats.print_stats()
