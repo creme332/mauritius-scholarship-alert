@@ -55,25 +55,5 @@ def mustSendReminder(communiqueTitle, closingDate):
             return True
     return False
 
-def foo():
-
-    # Get current time in mauritius 
-    MU_TIMEZONE = pytz.timezone('Indian/Mauritius')
-    MU_TIME =  datetime.now(MU_TIMEZONE)
-
-    with open('data/date.txt', 'r') as f:
-        for line in f:
-            if line.rstrip()=="": # ignore empty lines
-                continue
-            d = line.rstrip()
-            try:
-                # convert closing date to a correct format and set timezone to MU
-                format = dparser.parse(d,fuzzy=True, default=MU_TIME)
-            except Exception as e: # skip wrongly dates which are impossible to format
-                print(d, "skipped\n")
-                continue
-            else:
-                print(d,"->",format)
-                print((format - MU_TIME).days,"days")
 if __name__ == "__main__":
     print(mustSendReminder("super idol", "18 september 2022"))
