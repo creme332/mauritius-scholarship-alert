@@ -7,10 +7,10 @@ Get notified by email each time the Ministry of Education of Mauritius posts a n
 
 
 # 🚀Features
-- Receive an email notification at most 1 day after a new scholarship is posted.
+- Receive an email notification at most 12 hours after a new scholarship is posted.
+- Option to filter scholarships by type.
 - Asynchronous programming to speed up fetching of PDFs on website.
-<!-- - Receive a reminder a couple of days before the closing date of all scholarships.
-- Option to filter scholarships by type. -->
+- Receive an email reminder 3 days before the closing date of a scholarship.
 
 # ⚙ How it works
 - Github Actions is used to automatically run `main.py` script every day.
@@ -63,6 +63,27 @@ Keywords may include country name, degree level, ...
 
 Keep `keywords.txt` empty to disable filtering.
 
+## Filtering reminders of closing dates
+By default you will not receive a reminder 3 days before the closing date of a scholarship. To turn on, enter the **exact name** of the communique/s in `scholarships.txt`. 
+
+For example, suppose you want to be reminded of the scholarship highlighted below 3 days before its closing date. 
+
+![](assets/example.png)
+
+Your `scholarships.txt` should contain :
+```
+​STATE OF MAURITIUS POSTGRADUATE SCHOLARSHIP SCHEME 2022/2023
+```
+Keywords may include country name, degree level, ...
+
+Keep `scholarships.txt` empty to disable reminders.
+
+To be reminded of all scholarships, place only an asterisk `*` in the first line of `scholarships.txt`.
+
+```
+*
+```
+
 # 🤚 Limitations
 - At most 2000 emails per day and 3000 recipients per day.
 - If you set your repository to private, Github Actions will give you only 2000 execution minutes per month. A public repository has no such limit. (The `main.py` script takes less than 1 minute to execute on Github actions.) 
@@ -81,6 +102,13 @@ For reference purposes, here's how the website was structured at the time when m
 
 # 📃License
  This project uses the MIT license.
+
+# Issues faced when scraping
+- Website has inconsistent HTML. (no standard date format for closing date, erratic line breaks, presence of LF/CR chars, ...)
+
+# Safety checks
+
+- At most 5 emails is sent every 12 hours to mitigate consequences if program malfunctions.
 
 # 🔨 To-Do
 - [ ] Remind me of approaching closing dates.
