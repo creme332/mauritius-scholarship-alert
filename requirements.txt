@@ -1,5 +1,7 @@
-# python3 -m  pipreqs.pipreqs . --force
-# use  pip show Jinja2 to check package version
+# Update requirements.txt : python3 -m  pipreqs.pipreqs . --force
+# use  pip show <package> to check package version
+
+# to load environment variables
 python-dotenv==0.21.0
 
 # for scraping 
@@ -8,6 +10,12 @@ beautifulsoup4==4.11.1
 lxml==4.9.1
 httpx==0.23.0     
 
-# for sending email
+# to read pdfs
 PyPDF2==2.10.6
-redmail==0.4.1      
+
+# to send email
+redmail==0.4.1
+
+# to work with dates and timezones
+pytz==2022.2.1
+python-dateutil==2.8.2      
