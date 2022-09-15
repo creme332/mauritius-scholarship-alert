@@ -3,15 +3,15 @@
 import datetime
 import json
 import asyncio
-from time import sleep
 from bs4 import BeautifulSoup
 
 # my modules
-from src.communiqueclass import Communique
+from communiqueclass import Communique
 from cleanstring import cleanString
 from emailsender import sendEmail
 from pdfreader import getPDFtext, validPDF
 from requestfunction import makeRequest, getResponses
+from reminder import mustSendReminder
 
 # to measure code performance
 import cProfile
@@ -20,6 +20,7 @@ import pstats
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 # file containing LAST_SCRAPED_COMMUNIQUE
 DATABASE_FILE_PATH = "data/scrape.json"
+
 
 def main():
 
@@ -31,7 +32,7 @@ def main():
     # scrape website to obtain communique titles and main pdf urls
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
     return_values = scrapeWebsite(makeRequest(URL).text)
-    email_titles = return_values[1] # new communique title 
+    email_titles = return_values[1]  # new communique title
     pdf_urls = return_values[0]
 
     # request pdfs
@@ -51,7 +52,8 @@ def main():
         print("Skipped responeses\n", "\n".join(skipped_responses))
 
     # send emails to myself
-    EMAIL_LIMIT = 5 # max number of emails that can be sent when main.py is run once.
+    # max number of emails that can be sent when main.py is run once.
+    EMAIL_LIMIT = 5
     for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
         if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
             sendEmail(email_titles[i], all_pdfs[i])
@@ -135,16 +137,15 @@ def scrapeWebsite(RESPONSETEXT):
             updateDatabase(first_communique)
     return [pdf_urls, email_titles]
 
-def reminder(RESPONSETEXT, scList):
-    if len(scList)==0:
-        return
+
+def reminder(RESPONSETEXT):
     soup = BeautifulSoup(RESPONSETEXT, 'lxml')
     table = soup.find('table')
     table_rows = table.find_all('tr')
 
     for row in table_rows:
         # ignore header, footer, empty rows
-        if (row.find('td') is None) or (row.find('a') is None):  
+        if (row.find('td') is None) or (row.find('a') is None):
             continue
 
         current_communique = Communique()
@@ -156,9 +157,25 @@ def reminder(RESPONSETEXT, scList):
         if (current_communique.title == ""):
             current_communique.title = cleanString(communique_field.text)
 
+        if current_communique.closingDate == "":
+            return
+        if mustSendReminder(current_communique.title, current_communique.closingDate):
+            emailTitle = "URGENT : Deadline of scholarship approaching!"
+            emailBody = f"""
+            The deadline of "{current_communique.title}" is 3 days from now.
+            View all details on website : https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
+            """
+            sendEmail(emailTitle, emailBody)
+
 if __name__ == "__main__":
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    reminder(makeRequest(URL).text)
+    # reminder(makeRequest(URL).text)
+    emailTitle = "URGENT : Deadline of scholarship approaching!"
+    emailBody = f"""
+    The deadline of "TEST" is 3 days from now.
+    View all details on website : https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
+    """
+    sendEmail(emailTitle, emailBody)
     # main()
     # with cProfile.Profile() as pr:
     #     main()
