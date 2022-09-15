@@ -15,16 +15,22 @@ def mustSendReminder(communiqueTitle, closingDate):
         Boolean: True if a reminder must be sent
     """
 
-    # extract list of communiques which are important
+    # extract list of user-defined communiques from scholarships.txt
     importantScholarshipsList = []
     with open('data/scholarships.txt', 'r') as f:
         for scholarship in f:
-            importantScholarshipsList.append(scholarship.rstrip('\n'))
+            importantScholarshipsList.append(scholarship.strip())
     
     # if user did not define any important scholarships, no reminder.
     if len(importantScholarshipsList) == 0 :
         return False
 
+    # if user wants to receive a reminder for all scholarships.
+    if (len(importantScholarshipsList) == 1 and
+     importantScholarshipsList[0]=='*') :
+        return True
+
+    # if user did not mention current communique title
     if(communiqueTitle not in importantScholarshipsList):
         return False
 
@@ -57,9 +63,9 @@ def foo():
 
     with open('data/date.txt', 'r') as f:
         for line in f:
-            if line.rstrip('\n')=="": # ignore empty lines
+            if line.rstrip()=="": # ignore empty lines
                 continue
-            d = line.rstrip('\n')
+            d = line.rstrip()
             try:
                 # convert closing date to a correct format and set timezone to MU
                 format = dparser.parse(d,fuzzy=True, default=MU_TIME)
@@ -70,4 +76,4 @@ def foo():
                 print(d,"->",format)
                 print((format - MU_TIME).days,"days")
 if __name__ == "__main__":
-    print(mustSendReminder("super idol", "12 september 2022"))
+    print(mustSendReminder("super idol", "18 september 2022"))
