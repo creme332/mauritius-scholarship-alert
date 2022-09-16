@@ -21,18 +21,17 @@ def mustSendReminder(communiqueTitle, closingDate):
         for scholarship in f:
             importantScholarshipsList.append(scholarship.strip())
     
-    # if user did not define any important scholarships, no reminder.
+    # if user did not define any important scholarships, send no reminder.
     if len(importantScholarshipsList) == 0 :
         return False
 
-    # if user wants to receive a reminder for all scholarships.
-    if (len(importantScholarshipsList) == 1 and
-     importantScholarshipsList[0]=='*') :
-        return True
-
-    # if user did not mention current communique title
-    if(communiqueTitle not in importantScholarshipsList):
+    # if user is not interested in current communique and user is 
+    # not interested in all scholarships
+    if(communiqueTitle not in importantScholarshipsList and
+    importantScholarshipsList[0]!='*'):
         return False
+
+    # at this point user is interested with at least 1 scholarship
 
     # decide if it is the right time to send the reminder
     DEFAULT_GAP  = 3 # numbers of days before closing date to send reminder
@@ -56,4 +55,4 @@ def mustSendReminder(communiqueTitle, closingDate):
     return False
 
 if __name__ == "__main__":
-    print(mustSendReminder("super idol", "18 september 2022"))
+    print(mustSendReminder("super", "19 september 2022"))
