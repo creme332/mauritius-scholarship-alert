@@ -14,8 +14,8 @@ from requestfunction import makeRequest, getResponses
 from reminder import mustSendReminder
 
 # to measure code performance
-import cProfile
-import pstats
+# import cProfile
+# import pstats
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
 DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQUE
