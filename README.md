@@ -15,10 +15,9 @@ Get notified by email each time the Ministry of Education of Mauritius posts a n
 
 # ⚙ How it works
 - Github Actions is used to automatically run `main.py` script every day.
- - The program scrapes the scholarship website and checks for any new communique. 
- - Newly discovered communiques are sent by email to you. Your own email address will be used to send you emails.
+- The program scrapes the scholarship website and checks for any new communique. 
+- Newly discovered communiques are sent by email to you. Your own email address will be used to send you emails.
     ![Example of email](assets/emailgif.gif)
-
  - The most recent commnique found is then saved in `scrape.json` for future reference.
 
 # ✍Usage
