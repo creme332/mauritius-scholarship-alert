@@ -5,6 +5,7 @@
 
 Get notified by email each time the Ministry of Education of Mauritius posts a new scholarship communique on its [website](https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx).
 
+> ⚠ This project is not affiliated with the Ministry of Education of Mauritius. 
 
 # 🚀Features
 - Receive an email notification at most 12 hours after a new scholarship is posted.
@@ -27,9 +28,9 @@ The fastest way to get started is to fork this repository and follow the followi
 2. Create two [Github repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) named  `EMAIL_PASSCODE` and `SENDER_EMAIL_ADDRESS` respectively. `EMAIL_PASSCODE` should contain your newly created gmail app password and `SENDER_EMAIL_ADDRESS` should contain the corresponding gmail account. Do not include quotation marks in text box given.
     ![github secret image](assets/githubsecret.png)
 
-> It is **NOT** recommended to use your gmail account password as the `EMAIL_PASSCODE` even though it works.
+> ⚠ It is **NOT** recommended to use your gmail account password as the `EMAIL_PASSCODE` even though it works.
 
-> **The value `EMAIL_PASSCODE` must not be shared with anyone and must not be present in the code.** 
+> ⚠ **The value `EMAIL_PASSCODE` must not be shared with anyone and must not be present in the code.** 
 
 ## Run locally without Github Actions
 1. Clone repo.
@@ -59,17 +60,17 @@ For example, to be notified of only master's scholarships to the UK, your `keywo
 master's
 uk
 ```
-> Keywords may include country name, degree level, ...
+> 💡 Keywords may include country name, degree level, ...
 
-> Keep `keywords.txt` empty to disable filtering.
+> 💡 Keep `keywords.txt` empty to disable filtering.
 
 ## Enable reminders of scholarships' closing dates
 
-By default you will not receive any reminder of the closing date of scholarships.
+Ensure that  `scholarships.txt` is empty if you do not want to receive any reminder of the closing date of scholarships.
 
 To be reminded of the closing date of scholarships **3 days before its closing date**, enter the **exact name** of each communique on a new line in `scholarships.txt`. 
 
-For example, to be reminded of the scholarship highlighted below 
+For example, to be reminded of the scholarship highlighted below, 
 
 ![screenshot of website highlighting one communique](assets/example.png)
 
@@ -78,8 +79,7 @@ Your `scholarships.txt` should contain :
 ​STATE OF MAURITIUS POSTGRADUATE SCHOLARSHIP SCHEME 2022/2023
 ```
 
-If the communique is multi-line such as the one below, enter **only the first line**.
-
+If the communique field is multi-line with many links, enter the data from **only the first line**.
 
 To be reminded of **all** scholarships, place only an asterisk `*` in the first line of `scholarships.txt`.
 
@@ -87,29 +87,20 @@ To be reminded of **all** scholarships, place only an asterisk `*` in the first 
 *
 ```
 
-> Keep `scholarships.txt` empty to disable reminders.
-
 # 🤚 Limitations
 - Up to 5 emails (excluding reminders) can be sent every 12 hours.
 
->This limits the consequences of a program malfunction in the event of a major change to the scholarship website. In the worst case scenario, the program may send emails for all scholarships at once and you may get your gmail account banned. Change the email limit in the source code at your own risk.
+> ⚠ This limits the consequences of a program malfunction in the event of a major change to the scholarship website. In the worst case scenario, the program may send emails for all scholarships at once and you may get your gmail account banned. Change the email limit in the source code at your own risk.
 
 - If you set your repository to private, Github Actions will give you only 2000 execution minutes per month. A public Github repository has no such limit. 
-- The `main.py` script has a run duration of 25-60 seconds on the  Ubuntu 2-core runner from Github Actions.
+- The `main.py` script has a run duration of **25-60 seconds** on the  Ubuntu 2-core runner provided by Github.
 
 For updated information about quotas :
 - [Github Actions Quotas](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions)
 - [Gmail Quotas](https://support.google.com/a/answer/166852?hl=en)
 
-# 🙋‍♂️Disclaimer
-- This project is not affiliated with the Ministry of Education of Mauritius. 
-
-
 # 📃License
  This project uses the MIT license.
-
-# Issues faced when scraping
-- Website has inconsistent HTML. (no standard date format for closing date, erratic line breaks, presence of LF/CR chars, ...)
 
 # 🔨 To-Do
 - [ ] Add unit tests + possibly a separate workflow
