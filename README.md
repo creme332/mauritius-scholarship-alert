@@ -104,6 +104,7 @@ For updated information about quotas :
 # 🔨 To-Do
 - [ ] Add unit tests + possibly a separate workflow
 - [ ] Save all scraped data to Firestore
+- [ ] Use html to improve email template
 - [ ] Create a registration form so that anyone can subscribe for updates.
 
 ### ✔ Done
