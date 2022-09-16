@@ -18,9 +18,7 @@ import cProfile
 import pstats
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
-# file containing LAST_SCRAPED_COMMUNIQUE
-DATABASE_FILE_PATH = "data/scrape.json"
-
+DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQUE
 
 def main():
 
@@ -29,18 +27,25 @@ def main():
     with open(DATABASE_FILE_PATH) as f:
         LAST_SCRAPED_COMMUNIQUE = json.load(f)
 
-    # scrape website to obtain communique titles and main pdf urls
+    # get html code of website
     URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    return_values = scrapeWebsite(makeRequest(URL).text)
+    RESPONSETEXT = makeRequest(URL).text
+
+    # get html code of rows in first table on website
+    soup = BeautifulSoup(RESPONSETEXT, 'lxml')
+    table_rows = soup.find('table').find_all('tr')
+
+    # obtain communique titles and main pdf urls
+    return_values = extractMainInfo(table_rows)
     email_titles = return_values[1]  # new communique title
     pdf_urls = return_values[0]
 
     # request pdfs
     responses = asyncio.run(getResponses(pdf_urls))
+
+    # get the pdf text from each response
     all_pdfs = []
     skipped_responses = []
-
-    # get pdf text from each response
     for res in responses:
         if res.status_code == 200:
             all_pdfs.append(getPDFtext(res))
@@ -51,31 +56,43 @@ def main():
     if (len(skipped_responses) > 0):
         print("Skipped responeses\n", "\n".join(skipped_responses))
 
-    # send emails to myself
+    # For newly discovered scholarships, send emails to myself
     # max number of emails that can be sent when main.py is run once.
     EMAIL_LIMIT = 5
     for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
         if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
             sendEmail(email_titles[i], all_pdfs[i])
 
+    # Check closing dates of all scholarships and send reminders if necessary
+    sendReminders(table_rows)
+
 
 def updateDatabase(communique_info):
+    """Update the contents of in scrape.json
+
+    Args:
+        communique_info (dictionary): A dictionary with all
+         relevant details of a communique
+    """
     with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
         json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
 
-def scrapeWebsite(RESPONSETEXT):
+def extractMainInfo(table_rows):
+    """Returns a list of communique titles and pdf urls for communiques 
+    which have not been scraped before
+
+    Args:
+        table_rows (html): A list of the html code for each table row
+
+    Returns:
+        2D list: First inner list is for titles and second inner 
+        list is for pdf urls.
+    """
     BASE_URL = 'https://education.govmu.org'  # base url for pdf docs
     firstrowfound = False
     first_communique = {}
     global LAST_SCRAPED_COMMUNIQUE
-
-    soup = BeautifulSoup(RESPONSETEXT, 'lxml')
-
-    # There are 2 tables on the page. Only the first one is important.
-    # The first table contains communiques sorted by date (earliest first)
-    table = soup.find('table')
-    table_rows = table.find_all('tr')
 
     newScholarshipsList = []  # list of new scholarships discovered
     pdf_urls = []  # pdf urls which must be requested
@@ -138,11 +155,12 @@ def scrapeWebsite(RESPONSETEXT):
     return [pdf_urls, email_titles]
 
 
-def reminder(RESPONSETEXT):
-    soup = BeautifulSoup(RESPONSETEXT, 'lxml')
-    table = soup.find('table')
-    table_rows = table.find_all('tr')
+def sendReminders(table_rows):
+    """Sends reminders for communiques if needed
 
+    Args:
+        table_rows (html): A list of the html code for each table row
+    """
     for row in table_rows:
         # ignore header, footer, empty rows
         if (row.find('td') is None) or (row.find('a') is None):
@@ -167,16 +185,9 @@ def reminder(RESPONSETEXT):
             """
             sendEmail(emailTitle, emailBody)
 
+
 if __name__ == "__main__":
-    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
-    # reminder(makeRequest(URL).text)
-    emailTitle = "URGENT : Deadline of scholarship approaching!"
-    emailBody = f"""
-    The deadline of "TEST" is 3 days from now.
-    View all details on website : https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
-    """
-    sendEmail(emailTitle, emailBody)
-    # main()
+    main()
     # with cProfile.Profile() as pr:
     #     main()
 
