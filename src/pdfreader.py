@@ -7,7 +7,7 @@ def getPDFtext(response):
     """_summary_
 
     Args:
-        response (?): HTML response after requesting a URL
+        response (object): HTML response after requesting a URL
 
     Returns:
         string: A string with all text content in pdf
