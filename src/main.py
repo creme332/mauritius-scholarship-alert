@@ -65,6 +65,7 @@ def main():
             sendEmail(email_titles[i], all_pdfs[i])
             emails_sent_count += 1
     print(emails_sent_count,"scholarship emails were sent!")
+
     # Check closing dates of all scholarships and send reminders if necessary
     sendReminders(table_rows)
 
@@ -143,8 +144,9 @@ def extractMainInfo(table_rows):
             first_communique = current_communique.to_dict()
 
     # print updates
-    print(len(newScholarshipsList), "new scholarships found on website !\n")
-    print("\n\n".join(newScholarshipsList))
+    print(len(newScholarshipsList), "new scholarships found on website !")
+    if(len(newScholarshipsList)>0):
+        print("\n\n".join(newScholarshipsList))
 
     # update database only if needed
     if (LAST_SCRAPED_COMMUNIQUE == {}):  # this is our first time scraping
@@ -179,8 +181,6 @@ def sendReminders(table_rows):
         if (current_communique.title == ""):
             current_communique.title = cleanString(communique_field.text)
 
-        if current_communique.closingDate == "":
-            return
         if mustSendReminder(current_communique.title, current_communique.closingDate):
             emailTitle = "URGENT : Deadline of scholarship approaching!"
             emailBody = f"""
@@ -189,7 +189,7 @@ def sendReminders(table_rows):
             """
             sendEmail(emailTitle, emailBody)
             reminders_sent +=1 
-    print(reminders_sent, "reminders were sent !")
+    print(reminders_sent, "closing dates reminders were sent !")
 if __name__ == "__main__":
     main()
     # with cProfile.Profile() as pr:
