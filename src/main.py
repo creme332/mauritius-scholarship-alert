@@ -59,10 +59,12 @@ def main():
     # For newly discovered scholarships, send emails to myself
     # max number of emails that can be sent when main.py is run once.
     EMAIL_LIMIT = 5
+    emails_sent_count = 0
     for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
         if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
             sendEmail(email_titles[i], all_pdfs[i])
-
+            emails_sent_count += 1
+    print(emails_sent_count,"scholarship emails were sent!")
     # Check closing dates of all scholarships and send reminders if necessary
     sendReminders(table_rows)
 
@@ -161,6 +163,8 @@ def sendReminders(table_rows):
     Args:
         table_rows (html): A list of the html code for each table row
     """
+
+    reminders_sent = 0 # number of reminders sent
     for row in table_rows:
         # ignore header, footer, empty rows
         if (row.find('td') is None) or (row.find('a') is None):
@@ -184,8 +188,8 @@ def sendReminders(table_rows):
             View all details on website : https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
             """
             sendEmail(emailTitle, emailBody)
-
-
+            reminders_sent +=1 
+    print(reminders_sent, "reminders were sent !")
 if __name__ == "__main__":
     main()
     # with cProfile.Profile() as pr:
