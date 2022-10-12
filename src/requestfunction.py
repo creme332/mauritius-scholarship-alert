@@ -2,6 +2,9 @@
 import asyncio
 import httpx
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 
 async def getResponses(URL_list):
     """Uses asynchronous programming to make requests to server. 
@@ -26,17 +29,29 @@ async def getResponses(URL_list):
 
 def makeRequest(URL):
     HEADERS = {
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
     }
-    TIMEOUT = 100 # allow at most 100s to make request
+    # if we want to get the headers we sent the server, print (makeRequest(url).request.headers)
+    
+    # https://stackoverflow.com/a/47475019/17627866
+    session = requests.Session()
+    session.headers.update(HEADERS)
+
+    retry = Retry(connect=5, backoff_factor=0.5) # max number of retries = 5
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    
     try:
-        r = requests.get(URL, headers=HEADERS, timeout=TIMEOUT)
+        r = session.get(URL)
     except Exception as e:
         raise SystemExit(e)
     else:
-        if (r.status_code == 200): # valid response
+        if (r.status_code == 200):  # valid response
             return r
-        raise SystemExit("Invalid status code when requesting PDF : {r.status_code}", "\n URL : {URL}")
+        raise SystemExit(
+            "Invalid status code when requesting PDF : {r.status_code}", "\n URL : {URL}")
+
 
 if __name__ == "__main__":
-    makeRequest('hello.xyz')
+    print(makeRequest('https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx'))
