@@ -37,7 +37,7 @@ def makeRequest(URL):
     session = requests.Session()
     session.headers.update(HEADERS)
 
-    retry = Retry(connect=5, backoff_factor=0.5) # max number of retries = 5
+    retry = Retry(connect=3, backoff_factor=0.5)
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('http://', adapter)
     session.mount('https://', adapter)
@@ -45,7 +45,7 @@ def makeRequest(URL):
     try:
         r = session.get(URL)
     except Exception as e:
-        raise SystemExit(e)
+        raise SystemExit("makeRequest({url})failed. Exception :\n" ,e)
     else:
         if (r.status_code == 200):  # valid response
             return r
