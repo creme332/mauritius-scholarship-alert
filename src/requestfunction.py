@@ -4,7 +4,6 @@ import httpx
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import urllib3
 
 async def getResponses(URL_list):
     """Uses asynchronous programming to make requests to server. 
@@ -37,10 +36,6 @@ def makeRequest(URL):
     session = requests.Session()
     session.headers.update(HEADERS)
     
-    # Make an unverified HTTPS request
-    session.verify =  False
-    urllib3.disable_warnings()
-
     retry = Retry(connect=3, backoff_factor=0.5)
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('http://', adapter)
