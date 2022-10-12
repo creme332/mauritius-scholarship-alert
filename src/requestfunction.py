@@ -4,7 +4,7 @@ import httpx
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-
+import urllib3
 
 async def getResponses(URL_list):
     """Uses asynchronous programming to make requests to server. 
@@ -36,6 +36,10 @@ def makeRequest(URL):
     # https://stackoverflow.com/a/47475019/17627866
     session = requests.Session()
     session.headers.update(HEADERS)
+    
+    # Make an unverified HTTPS request
+    session.verify =  False
+    urllib3.disable_warnings()
 
     retry = Retry(connect=3, backoff_factor=0.5)
     adapter = HTTPAdapter(max_retries=retry)
@@ -44,13 +48,15 @@ def makeRequest(URL):
     
     try:
         r = session.get(URL)
+    except requests.exceptions.ConnectionError as e :
+        raise SystemExit(f"Connection Error for {URL}", e)
     except Exception as e:
-        raise SystemExit("makeRequest({url})failed. Exception :\n" ,e)
+        raise SystemExit(f"makeRequest({URL})failed. Exception :" ,e)
     else:
         if (r.status_code == 200):  # valid response
             return r
         raise SystemExit(
-            "Invalid status code when requesting PDF : {r.status_code}", "\n URL : {URL}")
+            f"Invalid status code when requesting PDF : {r.status_code}", f"\n URL : {URL}")
 
 
 if __name__ == "__main__":
