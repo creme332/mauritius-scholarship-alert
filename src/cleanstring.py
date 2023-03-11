@@ -16,14 +16,16 @@ def cleanString(name):
     ZERO_WIDTH_SPACE = u'\u200b'
 
     name = (name.strip()
-    .replace(EOL_CHAR, ' ')
-    .replace(NON_BREAK_SPACE_CHAR, ' ')
-    .replace(ZERO_WIDTH_SPACE, '')
-    .replace(LF_CHAR, '')
-    )
+            .replace(EOL_CHAR, ' ')
+            .replace(NON_BREAK_SPACE_CHAR, ' ')
+            .replace(ZERO_WIDTH_SPACE, '')
+            .replace(LF_CHAR, '')
+            )
     return name.strip()
     # return name.strip().split(' ')
 
+
 if __name__ == "__main__":
-    test = ['\u200bSTATE', 'OF', 'MAURITIUS', 'POSTGRADUATE', 'SCHOLARSHIP', 'SCHEME', '2022/2023']
+    test = ['\u200bSTATE', 'OF', 'MAURITIUS',
+            'POSTGRADUATE', 'SCHOLARSHIP', 'SCHEME', '2022/2023']
     print(cleanString(' '.join(test)))

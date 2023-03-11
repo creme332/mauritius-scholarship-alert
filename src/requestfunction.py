@@ -5,6 +5,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+
 async def getResponses(URL_list):
     """Uses asynchronous programming to make requests to server. 
 
@@ -31,22 +32,22 @@ def makeRequest(URL):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
     }
     # if we want to get the headers we sent the server, print (makeRequest(url).request.headers)
-    
+
     # https://stackoverflow.com/a/47475019/17627866
     session = requests.Session()
     session.headers.update(HEADERS)
-    
+
     retry = Retry(connect=3, backoff_factor=0.5)
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('http://', adapter)
     session.mount('https://', adapter)
-    
+
     try:
         r = session.get(URL)
-    except requests.exceptions.ConnectionError as e :
+    except requests.exceptions.ConnectionError as e:
         raise SystemExit(f"Connection Error for {URL}", e)
     except Exception as e:
-        raise SystemExit(f"makeRequest({URL})failed. Exception :" ,e)
+        raise SystemExit(f"makeRequest({URL})failed. Exception :", e)
     else:
         if (r.status_code == 200):  # valid response
             return r
@@ -55,4 +56,5 @@ def makeRequest(URL):
 
 
 if __name__ == "__main__":
-    print(makeRequest('https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx'))
+    print(makeRequest(
+        'https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx'))
