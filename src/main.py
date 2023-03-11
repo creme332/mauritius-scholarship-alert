@@ -18,7 +18,9 @@ from reminder import mustSendReminder
 # import pstats
 
 LAST_SCRAPED_COMMUNIQUE = {}  # communique since last time scraping was done
-DATABASE_FILE_PATH = "data/scrape.json" # file containing LAST_SCRAPED_COMMUNIQUE
+# file containing LAST_SCRAPED_COMMUNIQUE
+DATABASE_FILE_PATH = "data/scrape.json"
+
 
 def main():
 
@@ -64,7 +66,7 @@ def main():
         if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
             sendEmail(email_titles[i], all_pdfs[i])
             emails_sent_count += 1
-    print(emails_sent_count,"scholarship emails were sent!")
+    print(emails_sent_count, "scholarship emails were sent!")
 
     # Check closing dates of all scholarships and send reminders if necessary
     sendReminders(table_rows)
@@ -106,10 +108,15 @@ def extractMainInfo(table_rows):
             continue
         if row.find('a') is None:  # ignore empty rows
             continue
+        columns = row.find_all('td')
 
         current_communique = Communique()
-        communique_field = row.find_all('td')[0]
-        closingDate_field = row.find_all('td')[1]
+        communique_field = columns[0]
+
+        closingDateFound = False
+        if (len(columns) == 2):
+            closingDateFound = True
+            closingDate_field = row.find_all('td')[1]
 
         current_communique.title = cleanString(communique_field.
                                                find('a').text)
@@ -134,7 +141,14 @@ def extractMainInfo(table_rows):
         email_titles.append(current_communique.title)
 
         current_communique.urls = urls
-        current_communique.closingDate = cleanString(closingDate_field.text)
+
+        # if communique has no closing date, choose the closing date of the last scraped communique
+        if (closingDateFound):
+            current_communique.closingDate = cleanString(
+                closingDate_field.text)
+        else:
+            current_communique.closingDate = LAST_SCRAPED_COMMUNIQUE['closingDate']
+
         current_communique.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
                                         format(datetime.datetime.now()))
         newScholarshipsList.append(current_communique.title)
@@ -145,7 +159,7 @@ def extractMainInfo(table_rows):
 
     # print updates
     print(len(newScholarshipsList), "new scholarships found on website !")
-    if(len(newScholarshipsList)>0):
+    if (len(newScholarshipsList) > 0):
         print("\n\n".join(newScholarshipsList))
 
     # update database only if needed
@@ -166,10 +180,14 @@ def sendReminders(table_rows):
         table_rows (html): A list of the html code for each table row
     """
 
-    reminders_sent = 0 # number of reminders sent
+    reminders_sent = 0  # number of reminders sent
     for row in table_rows:
         # ignore header, footer, empty rows
         if (row.find('td') is None) or (row.find('a') is None):
+            continue
+
+        # ignore communique with missing fields
+        if (len(row.find_all('td')) == 1):
             continue
 
         current_communique = Communique()
@@ -188,8 +206,10 @@ def sendReminders(table_rows):
             View all details on website : https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
             """
             sendEmail(emailTitle, emailBody)
-            reminders_sent +=1 
+            reminders_sent += 1
     print(reminders_sent, "closing dates reminders were sent !")
+
+
 if __name__ == "__main__":
     main()
     # with cProfile.Profile() as pr:
