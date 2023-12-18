@@ -7,21 +7,21 @@ Get notified by email each time the Ministry of Education of Mauritius posts a n
 
 > ⚠ This project is not affiliated with the Ministry of Education of Mauritius. 
 
-# 🚀Features
-- Receive an email notification at most 12 hours after a new scholarship is posted.
-- Option to filter scholarships by keyword.
-- Option to receive an email reminder 3 days before the closing date of a specified scholarship.
+## 🚀 Features
+- Email notification within 12 hours when a new scholarship is posted.
+- Scholarship filtering options.
+- Scholarship deadline reminder: Receive an email reminder 3 days before the closing date of a specified scholarship.
 - Asynchronous programming to speed up fetching of PDFs from website.
 
-# ⚙ How it works
+## ⚙ How it works
 - Github Actions is used to automatically run `main.py` script every day.
 - The program scrapes the scholarship website and checks for any new communique. 
 - Newly discovered communiques are sent by email to you. Your own email address will be used to send you emails.
     ![Example of email](assets/emailgif.gif)
- - The most recent commnique found is then saved in `scrape.json` for future reference.
+ - The most recent communique found is then saved in `scrape.json` for future reference.
 
-# ✍Usage
-## Run with Github Actions 
+## ✍Usage
+### Run with Github Actions 
 The fastest way to get started is to fork this repository and follow the following instructions :
 1. Create a [gmail app password](https://itsupport.umd.edu/itsupport/?id=kb_article_view&sysparm_article=KB0015112&sys_kb_id=76433076dbdf8c904cb035623996194b&spa=1). Keep a copy of this password.
 2. Create two [Github repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) named  `EMAIL_PASSCODE` and `SENDER_EMAIL_ADDRESS` respectively. `EMAIL_PASSCODE` should contain your newly created gmail app password and `SENDER_EMAIL_ADDRESS` should contain the corresponding gmail account. Do not include quotation marks in text box given.
@@ -31,7 +31,7 @@ The fastest way to get started is to fork this repository and follow the followi
 
 > ⚠ **The value `EMAIL_PASSCODE` must not be shared with anyone and must not be present in the code.** 
 
-## Run locally without Github Actions
+### Run locally without Github Actions
 1. Clone repo.
 
     ```bash
@@ -51,7 +51,7 @@ The fastest way to get started is to fork this repository and follow the followi
     ```
 4. Run `main.py` script.
 
-## Filtering scholarships
+### Filtering scholarships
 By default filtering option is turned off. To turn on, enter keywords in `keywords.txt`. You will only be notified of scholarships matching **at least one of the keywords**.
 
 For example, to be notified of only master's scholarships to the UK, your `keywords.txt` should look like this :
@@ -63,7 +63,7 @@ uk
 
 > 💡 Keep `keywords.txt` empty to disable filtering.
 
-## Enable reminders of scholarships' closing dates
+### Enable reminders of scholarships' closing dates
 
 Ensure that  `scholarships.txt` is empty if you do not want to receive any reminder of the closing date of scholarships.
 
@@ -86,7 +86,7 @@ To be reminded of **all** scholarships, place only an asterisk `*` in the first 
 *
 ```
 
-# 🤚 Limitations
+## 🤚 Limitations
 - Up to 5 emails (excluding reminders) can be sent every 12 hours.
 
 > ⚠ This limits the consequences of a program malfunction in the event of a major change to the scholarship website. In the worst case scenario, the program may send emails for all scholarships at once and you may get your gmail account banned. Change the email limit in the source code at your own risk.
@@ -98,19 +98,15 @@ For updated information about quotas :
 - [Github Actions Quotas](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions)
 - [Gmail Quotas](https://support.google.com/a/answer/166852?hl=en)
 
-# 📃License
- This project uses the MIT license.
-
-# 🔨 To-Do
+## 🔨 To-Do
 - [ ] Add unit tests + possibly a separate workflow
+- [ ] rename text file to filters
+- [ ] add excalidraw diagram explaining how it works
+- [ ] create a simple website
+- [ ] Activate environment. project is using old environment. create new one in 
 - [ ] Save all scraped data to Firestore
-- [ ] Use html to improve email template
+- [ ] Use html to improve email template (use Jinja)
 - [ ] Create a registration form so that anyone can subscribe for updates.
 
-### ✔ Done
-- [x] Remind me of approaching closing dates.
-- [x] Option to filter scholarships by type
-- [x] Add project social media preview.
-- [x] Add automatic build passing/failed shield
-- [x] Create new github secret for email
-- [x] Try to reduce execution time : remove unused libraries, caching, optimise program, asyncio ...
+## 📃License
+This project uses the MIT license.
