@@ -1,5 +1,3 @@
-#!venv/bin/python3
-
 def cleanString(name):
     """Normalize scholarship name by getting rid of special characters
     like line feed, zero width space, ...

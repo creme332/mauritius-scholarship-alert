@@ -1,4 +1,3 @@
-#!venv/bin/python3
 import PyPDF2
 import io
 from requestfunction import makeRequest

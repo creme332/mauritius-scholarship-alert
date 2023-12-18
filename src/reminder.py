@@ -1,4 +1,3 @@
-#!venv/bin/python3
 import dateutil.parser as dparser
 import pytz
 from datetime import datetime

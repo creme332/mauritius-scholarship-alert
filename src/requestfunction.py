@@ -1,4 +1,3 @@
-#!venv/bin/python3
 import asyncio
 import httpx
 import requests

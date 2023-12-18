@@ -1,4 +1,3 @@
-#!venv/bin/python3
 from redmail import gmail
 import os
 from dotenv import load_dotenv, find_dotenv
