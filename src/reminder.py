@@ -4,12 +4,13 @@ from datetime import datetime
 
 
 def mustSendReminder(communiqueTitle, closingDate):
-    """Check if a reminder must be sent for the communique 
+    """Check if a reminder must be sent for the communique
     passed as parameter.
 
     Args:
         communiqueTitle (string): title of communique as scraped from website.
-        closingDate (string): closing date of scholarship as scraped from website.
+        closingDate (string): closing date of scholarship as scraped from
+        website.
 
     Returns:
         Boolean: True if a reminder must be sent
@@ -45,7 +46,7 @@ def mustSendReminder(communiqueTitle, closingDate):
         # convert closing date to a correct format and set timezone to MU
         correctlyFormattedDate = dparser.parse(
             closingDate, fuzzy=True, default=MU_TIME)
-    except Exception as e:  # skip dates which are impossible to understand
+    except Exception:  # skip dates which are impossible to understand
         return False
     else:
         diff = (correctlyFormattedDate - MU_TIME).days

@@ -1,5 +1,3 @@
-#!venv/bin/python3
-
 import datetime
 import json
 import asyncio
@@ -30,7 +28,8 @@ def main():
         LAST_SCRAPED_COMMUNIQUE = json.load(f)
 
     # get html code of website
-    URL = "https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
+    URL = ("https://education.govmu.org/Pages/Downloads/Scholarships"
+           "/Scholarships-for-Mauritius-Students.aspx")
     RESPONSETEXT = makeRequest(URL).text
 
     # get html code of rows in first table on website
@@ -46,13 +45,13 @@ def main():
     responses = asyncio.run(getResponses(pdf_urls))
 
     # get the pdf text from each response
-    all_pdfs = []
+    pdfs_text = []
     skipped_responses = []
     for res in responses:
         if res.status_code == 200:
-            all_pdfs.append(getPDFtext(res))
+            pdfs_text.append(getPDFtext(res))
         else:
-            all_pdfs.append("")
+            pdfs_text.append("")
             skipped_responses.append(res)
 
     if (len(skipped_responses) > 0):
@@ -63,8 +62,8 @@ def main():
     EMAIL_LIMIT = 5
     emails_sent_count = 0
     for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
-        if (responses[i].status_code == 200 and validPDF(all_pdfs[i])):
-            sendEmail(email_titles[i], all_pdfs[i])
+        if (responses[i].status_code == 200 and validPDF(pdfs_text[i])):
+            sendEmail(email_titles[i], pdfs_text[i])
             emails_sent_count += 1
     print(emails_sent_count, "scholarship emails were sent!")
 
@@ -128,7 +127,8 @@ def extractMainInfo(table_rows):
             current_communique.title = cleanString(communique_field.text)
 
         # if we encounter a previously scraped communique, exit
-        if (LAST_SCRAPED_COMMUNIQUE != {} and current_communique.title == LAST_SCRAPED_COMMUNIQUE['title']):
+        if (LAST_SCRAPED_COMMUNIQUE != {} and
+                current_communique.title == LAST_SCRAPED_COMMUNIQUE['title']):
             break
 
         # create list of links present in current communique
@@ -142,12 +142,14 @@ def extractMainInfo(table_rows):
 
         current_communique.urls = urls
 
-        # if communique has no closing date, choose the closing date of the last scraped communique
+        # if communique has no closing date, choose the closing
+        # date of the last scraped communique
         if (closingDateFound):
             current_communique.closingDate = cleanString(
                 closingDate_field.text)
         else:
-            current_communique.closingDate = LAST_SCRAPED_COMMUNIQUE['closingDate']
+            old_date = LAST_SCRAPED_COMMUNIQUE['closingDate']
+            current_communique.closingDate = old_date
 
         current_communique.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
                                         format(datetime.datetime.now()))
@@ -199,11 +201,13 @@ def sendReminders(table_rows):
         if (current_communique.title == ""):
             current_communique.title = cleanString(communique_field.text)
 
-        if mustSendReminder(current_communique.title, current_communique.closingDate):
+        if mustSendReminder(current_communique.title,
+                            current_communique.closingDate):
             emailTitle = "URGENT : Deadline of scholarship approaching!"
             emailBody = f"""
             The deadline of "{current_communique.title}" is 3 days from now.
-            View all details on website : https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
+            View all details on website : https://education.govmu.org/Pages/
+            Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
             """
             sendEmail(emailTitle, emailBody)
             reminders_sent += 1

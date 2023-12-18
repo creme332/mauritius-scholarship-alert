@@ -25,7 +25,7 @@ def getPDFtext(response):
 
 
 def validPDF(PDF_text):
-    """Returns True if pdf contains at least 1 keyword from keywords.txt. 
+    """Returns True if pdf contains at least 1 keyword from keywords.txt.
     If text file is empty, always return true.
 
     Args:
@@ -50,6 +50,7 @@ def validPDF(PDF_text):
 
 
 if __name__ == "__main__":
-    URL = 'https://education.govmu.org/Documents/2022/scholarship/Communique-UK%20Commonwealth.doc.pdf'
+    URL = ('https://education.govmu.org/Documents/2022/scholarship/'
+           'Communique-UK%20Commonwealth.doc.pdf')
     txt = getPDFtext(makeRequest(URL))
     print(validPDF(txt))
