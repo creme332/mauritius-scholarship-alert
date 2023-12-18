@@ -9,5 +9,5 @@ class Communique(object):
         return vars(self)
 
     def to_list(self):
-        return [self.title, self.closingDate, self.urls, self.keywords, self.timestamp
-                ]
+        return [self.title, self.closingDate, self.urls, self.keywords,
+                self.timestamp]
