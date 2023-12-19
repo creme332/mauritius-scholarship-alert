@@ -5,8 +5,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 
-async def getResponses(URL_list):
-    """Uses asynchronous programming to make requests to server.
+async def request_all(URL_list):
+    """Uses asynchronous programming to make parallel requests to server.
 
     Args:
         URL_list (list): A list of URLS which must be requested
@@ -27,7 +27,7 @@ async def getResponses(URL_list):
     return responses
 
 
-def makeRequest(URL):
+def request(URL):
     HEADERS = {
         'user-agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                        'AppleWebKit/537.36 (KHTML, like Gecko)'
@@ -60,6 +60,6 @@ def makeRequest(URL):
 
 
 if __name__ == "__main__":
-    print(makeRequest(
+    print(request(
         'https://education.govmu.org/Pages/Downloads/'
         'Scholarships/Scholarships-for-Mauritius-Students.aspx'))
