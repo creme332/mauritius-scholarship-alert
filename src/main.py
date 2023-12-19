@@ -3,13 +3,11 @@ import json
 import asyncio
 from bs4 import BeautifulSoup
 
-# my modules
-from communiqueclass import Communique
-from cleanstring import cleanString
-from emailsender import sendEmail
-from pdfreader import getPDFtext, validPDF
-from requestfunction import makeRequest, getResponses
-from reminder import mustSendReminder
+from communique import Communique
+from utils import clean_string, extract_text, has_keyword
+from emailer import Emailer
+from request_helper import request, request_all
+from reminder import must_send_reminder
 
 # to measure code performance
 # import cProfile
@@ -30,48 +28,46 @@ def main():
     # get html code of website
     URL = ("https://education.govmu.org/Pages/Downloads/Scholarships"
            "/Scholarships-for-Mauritius-Students.aspx")
-    RESPONSETEXT = makeRequest(URL).text
+    RESPONSE_TEXT = request(URL).text
 
     # get html code of rows in first table on website
-    soup = BeautifulSoup(RESPONSETEXT, 'lxml')
-    table_rows = soup.find('table').find_all('tr')
+    SOUP = BeautifulSoup(RESPONSE_TEXT, 'lxml')
+    TABLE_ROWS = SOUP.find('table').find_all('tr')
 
     # obtain communique titles and main pdf urls
-    return_values = extractMainInfo(table_rows)
+    return_values = extract_main_info(TABLE_ROWS)
     email_titles = return_values[1]  # new communique title
     pdf_urls = return_values[0]
 
     # request pdfs
-    responses = asyncio.run(getResponses(pdf_urls))
+    responses = asyncio.run(request_all(pdf_urls))
 
     # get the pdf text from each response
     pdfs_text = []
     skipped_responses = []
     for res in responses:
         if res.status_code == 200:
-            pdfs_text.append(getPDFtext(res))
+            pdfs_text.append(extract_text(res))
         else:
             pdfs_text.append("")
             skipped_responses.append(res)
 
     if (len(skipped_responses) > 0):
-        print("Skipped responeses\n", "\n".join(skipped_responses))
+        print("Skipped responses\n", "\n".join(skipped_responses))
 
-    # For newly discovered scholarships, send emails to myself
-    # max number of emails that can be sent when main.py is run once.
-    EMAIL_LIMIT = 5
-    emails_sent_count = 0
-    for i in range(0, min(EMAIL_LIMIT, len(email_titles))):
-        if (responses[i].status_code == 200 and validPDF(pdfs_text[i])):
-            sendEmail(email_titles[i], pdfs_text[i])
-            emails_sent_count += 1
-    print(emails_sent_count, "scholarship emails were sent!")
+    # For newly discovered scholarships, send emails
+    emailer = Emailer()
+    for i in range(0, min(emailer.EMAIL_LIMIT, len(email_titles))):
+        if (responses[i].status_code == 200 and
+                has_keyword(pdfs_text[i])):
+            emailer.send_new_scholarship(email_titles[i], pdfs_text[i])
+    print(emailer.sent_count, "scholarship emails were sent!")
 
     # Check closing dates of all scholarships and send reminders if necessary
-    sendReminders(table_rows)
+    send_reminders(TABLE_ROWS)
 
 
-def updateDatabase(communique_info):
+def update_database(communique_info):
     """Update the contents of in scrape.json
 
     Args:
@@ -82,19 +78,19 @@ def updateDatabase(communique_info):
         json.dump(communique_info, f, ensure_ascii=False, indent=4)
 
 
-def extractMainInfo(table_rows):
-    """Returns a list of communique titles and pdf urls for communiques 
+def extract_main_info(table_rows):
+    """Returns a list of communique titles and pdf urls for communiques
     which have not been scraped before
 
     Args:
         table_rows (html): A list of the html code for each table row
 
     Returns:
-        2D list: First inner list is for titles and second inner 
+        2D list: First inner list is for titles and second inner
         list is for pdf urls.
     """
     BASE_URL = 'https://education.govmu.org'  # base url for pdf docs
-    firstrowfound = False
+    first_row_found = False
     first_communique = {}
     global LAST_SCRAPED_COMMUNIQUE
 
@@ -117,14 +113,14 @@ def extractMainInfo(table_rows):
             closingDateFound = True
             closingDate_field = row.find_all('td')[1]
 
-        current_communique.title = cleanString(communique_field.
-                                               find('a').text)
+        current_communique.title = clean_string(communique_field.
+                                                find('a').text)
 
         # The first anchor tag in each row is the scholarship name,
         #  except for QEC scholarship
         # corner case for communique similar to QEC
         if (current_communique.title == ""):
-            current_communique.title = cleanString(communique_field.text)
+            current_communique.title = clean_string(communique_field.text)
 
         # if we encounter a previously scraped communique, exit
         if (LAST_SCRAPED_COMMUNIQUE != {} and
@@ -145,7 +141,7 @@ def extractMainInfo(table_rows):
         # if communique has no closing date, choose the closing
         # date of the last scraped communique
         if (closingDateFound):
-            current_communique.closingDate = cleanString(
+            current_communique.closingDate = clean_string(
                 closingDate_field.text)
         else:
             old_date = LAST_SCRAPED_COMMUNIQUE['closingDate']
@@ -155,8 +151,8 @@ def extractMainInfo(table_rows):
                                         format(datetime.datetime.now()))
         newScholarshipsList.append(current_communique.title)
 
-        if not firstrowfound:
-            firstrowfound = True
+        if not first_row_found:
+            first_row_found = True
             first_communique = current_communique.to_dict()
 
     # print updates
@@ -166,23 +162,24 @@ def extractMainInfo(table_rows):
 
     # update database only if needed
     if (LAST_SCRAPED_COMMUNIQUE == {}):  # this is our first time scraping
-        updateDatabase(first_communique)
+        update_database(first_communique)
     else:
         if (first_communique != {} and
                 first_communique['title'] != LAST_SCRAPED_COMMUNIQUE['title']):
             # we have found at least 1 new scholarship
-            updateDatabase(first_communique)
+            update_database(first_communique)
     return [pdf_urls, email_titles]
 
 
-def sendReminders(table_rows):
-    """Sends reminders for communiques if needed
+def send_reminders(table_rows):
+    """Sends reminders (if any) for active communiques. An active
+    communique is a communique currently displayed on the scholarship
+    website.
 
     Args:
         table_rows (html): A list of the html code for each table row
     """
-
-    reminders_sent = 0  # number of reminders sent
+    emailer = Emailer()
     for row in table_rows:
         # ignore header, footer, empty rows
         if (row.find('td') is None) or (row.find('a') is None):
@@ -196,22 +193,16 @@ def sendReminders(table_rows):
         communique_field = row.find_all('td')[0]
         closingDate_field = row.find_all('td')[1]
 
-        current_communique.closingDate = cleanString(closingDate_field.text)
-        current_communique.title = cleanString(communique_field.find('a').text)
+        current_communique.closingDate = clean_string(closingDate_field.text)
+        current_communique.title = clean_string(
+            communique_field.find('a').text)
         if (current_communique.title == ""):
-            current_communique.title = cleanString(communique_field.text)
+            current_communique.title = clean_string(communique_field.text)
 
-        if mustSendReminder(current_communique.title,
-                            current_communique.closingDate):
-            emailTitle = "URGENT : Deadline of scholarship approaching!"
-            emailBody = f"""
-            The deadline of "{current_communique.title}" is 3 days from now.
-            View all details on website : https://education.govmu.org/Pages/
-            Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx
-            """
-            sendEmail(emailTitle, emailBody)
-            reminders_sent += 1
-    print(reminders_sent, "closing dates reminders were sent !")
+        if must_send_reminder(current_communique.title,
+                              current_communique.closingDate):
+            emailer.send_reminder(current_communique.title)
+    print(emailer.sent_count, "closing dates reminders were sent !")
 
 
 if __name__ == "__main__":

@@ -42,7 +42,7 @@ class Emailer:
             communique_name=communique_name,
         )
 
-        self.send_email("Scholarship Deadline", html_body)
+        self._send_email("Scholarship Deadline", html_body)
 
     def send_new_scholarship(self, communique_name, communique_text):
         if (len(communique_name.strip()) == 0):
@@ -56,9 +56,9 @@ class Emailer:
             communique_name=communique_name,
             communique_text=communique_text,
         )
-        self.send_email(communique_name, html_body)
+        self._send_email(communique_name, html_body)
 
-    def send_email(self, subject, html_body, receivers=[]):
+    def _send_email(self, subject, html_body, receivers=[]):
         if (self.sent_count >= self.EMAIL_LIMIT):
             raise SystemExit("Email Limit Exceeded")
 

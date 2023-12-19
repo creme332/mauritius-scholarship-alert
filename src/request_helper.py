@@ -5,7 +5,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 
-async def request_all(URL_list):
+async def request_all(url_list):
     """Uses asynchronous programming to make parallel requests to server.
 
     Args:
@@ -22,7 +22,7 @@ async def request_all(URL_list):
 
     async with httpx.AsyncClient(transport=transport, limits=limits,
                                  timeout=timeout) as client:
-        tasks = (client.get(url, follow_redirects=True) for url in URL_list)
+        tasks = (client.get(url, follow_redirects=True) for url in url_list)
         responses = await asyncio.gather(*tasks, return_exceptions=True)
     return responses
 

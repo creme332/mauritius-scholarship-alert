@@ -3,33 +3,32 @@ import pytz
 from datetime import datetime
 
 
-def mustSendReminder(communiqueTitle, closingDate):
-    """Check if a reminder must be sent for the communique
-    passed as parameter.
+def must_send_reminder(communique: str, closingDate: str) -> bool:
+    """Checks if a reminder must be sent for a given communique.
 
     Args:
-        communiqueTitle (string): title of communique as scraped from website.
-        closingDate (string): closing date of scholarship as scraped from
+        communique (str): title of communique as scraped from website.
+        closingDate (str): closing date of scholarship as scraped from
         website.
 
     Returns:
-        Boolean: True if a reminder must be sent
+        bool: True if a reminder must be sent
     """
 
     # extract list of user-defined communiques from scholarships.txt
-    importantScholarshipsList = []
-    with open('data/scholarships.txt', 'r') as f:
+    important_scholarships = []
+    with open('data/reminders.txt', 'r') as f:
         for scholarship in f:
-            importantScholarshipsList.append(scholarship.strip())
+            important_scholarships.append(scholarship.strip())
 
     # if user did not define any important scholarships, send no reminder.
-    if len(importantScholarshipsList) == 0:
+    if len(important_scholarships) == 0:
         return False
 
     # if user is not interested in current communique and user is
-    # not interested in all scholarships
-    if (communiqueTitle not in importantScholarshipsList and
-            importantScholarshipsList[0] != '*'):
+    # not interested in all scholarships, return false
+    if (communique not in important_scholarships and
+            important_scholarships[0] != '*'):
         return False
 
     # at this point user is interested with at least 1 scholarship
@@ -44,12 +43,12 @@ def mustSendReminder(communiqueTitle, closingDate):
 
     try:
         # convert closing date to a correct format and set timezone to MU
-        correctlyFormattedDate = dparser.parse(
+        formatted_date = dparser.parse(
             closingDate, fuzzy=True, default=MU_TIME)
     except Exception:  # skip dates which are impossible to understand
         return False
     else:
-        diff = (correctlyFormattedDate - MU_TIME).days
+        diff = (formatted_date - MU_TIME).days
         if (diff < 0):  # closing date is in the past
             return False
         if (diff == DEFAULT_GAP):
@@ -58,4 +57,4 @@ def mustSendReminder(communiqueTitle, closingDate):
 
 
 if __name__ == "__main__":
-    print(mustSendReminder("super", "19 september 2022"))
+    print(must_send_reminder("super", "19 september 2022"))

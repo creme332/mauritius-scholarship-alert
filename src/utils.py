@@ -1,6 +1,6 @@
 import PyPDF2
 import io
-from requestfunction import make_request
+from request_helper import request
 
 
 def clean_string(string: str) -> str:
@@ -47,24 +47,24 @@ def extract_text(response):
     return PDF_text
 
 
-def is_keyword_compliant(PDF_text: str) -> bool:
-    """Returns True if text contains at least 1 keyword from `keywords.txt` or
-    `keywords.txt` file is empty.
+def has_keyword(pdf_text: str) -> bool:
+    """Returns True if text contains at least 1 keyword from `filters.txt` or
+    `filters.txt` file is empty.
 
     Args:
-        PDF_text (str): A string of text content in a PDF
+        pdf_text (str): A string of text content in a PDF
 
     Returns:
         bool
     """
     # Replace U+2019 char with '
-    PDF_text = PDF_text.replace('’', "'")
+    pdf_text = pdf_text.replace('’', "'")
 
     line_count = 0
-    with open('data/keywords.txt', 'r') as f:
+    with open('data/filters.txt', 'r') as f:
         for keyword in f:
             line_count += 1
-            if keyword.strip().lower() in PDF_text.lower().split(' '):
+            if keyword.strip().lower() in pdf_text.lower().split(' '):
                 return True
     if line_count == 0:
         return True
@@ -78,5 +78,5 @@ if __name__ == "__main__":
 
     URL = ('https://education.govmu.org/Documents/2022/scholarship/'
            'Communique-UK%20Commonwealth.doc.pdf')
-    txt = extract_text(make_request(URL))
-    print(is_keyword_compliant(txt))
+    txt = extract_text(request(URL))
+    print(has_keyword(txt))
