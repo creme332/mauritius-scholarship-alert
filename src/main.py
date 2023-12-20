@@ -1,6 +1,6 @@
-import json
 import asyncio
 
+from communique_manager import CommuniqueManager
 from models.communique import Communique
 from utils import extract_text, has_keyword
 from emailer.emailer import Emailer
@@ -11,9 +11,7 @@ from scraper.request_helper import request_all
 # import cProfile
 # import pstats
 
-
-# path to file containing last scraped communique
-DATABASE_FILE_PATH = "data/scrape.json"
+MANAGER = CommuniqueManager()
 
 
 def filter_new(all_communiques: list[Communique]) -> list[Communique]:
@@ -28,13 +26,11 @@ def filter_new(all_communiques: list[Communique]) -> list[Communique]:
     Returns:
         list[Communique]: _description_
     """
+    global MANAGER
     new_communiques = []
 
     # read last scraped communique from file
-    # ! file is guaranteed to contain at least an empty dictionary
-    last_scraped_communique = {}
-    with open(DATABASE_FILE_PATH) as f:
-        last_scraped_communique = json.load(f)
+    last_scraped_communique = MANAGER.get_last_communique()
 
     # if website is being scraped for the first time, all communiques are new
     if not last_scraped_communique:
@@ -44,7 +40,7 @@ def filter_new(all_communiques: list[Communique]) -> list[Communique]:
     # in all_communiques. keep only communiques which are found before
     # the last communique
     for communique in all_communiques:
-        if communique.title == last_scraped_communique['title']:
+        if communique.title == last_scraped_communique.title:
             return new_communiques
         new_communiques.append(communique)
 
@@ -52,6 +48,7 @@ def filter_new(all_communiques: list[Communique]) -> list[Communique]:
 
 
 def main() -> None:
+    global MANAGER
     # fetch all communiques from website
     all_communiques = get_all_communiques()
 
@@ -69,7 +66,7 @@ def main() -> None:
         return
 
     # update last scraped communique
-    save_recent_communique(new_communiques[0])
+    MANAGER.save(new_communiques[0])
 
     # extract communique titles
     email_titles = [c.title for c in new_communiques]
@@ -92,17 +89,6 @@ def main() -> None:
                 has_keyword(pdfs_text[i])):
             emailer.send_new_scholarship(email_titles[i], pdfs_text[i])
     print(emailer.sent_count, "scholarship emails were sent!")
-
-
-def save_recent_communique(new_communique: Communique) -> None:
-    """Saves the most recently scraped communique to `scrape.json`
-
-    Args:
-        new_communique (Communique): The most recently recently scraped
-        communique
-    """
-    with open(DATABASE_FILE_PATH, 'w', encoding='utf-8') as f:
-        json.dump(new_communique.to_dict(), f, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
