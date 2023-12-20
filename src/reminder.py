@@ -7,16 +7,17 @@ from utils import clean_string
 DEADLINE_GAP = 3  # numbers of days before closing date to send reminder
 
 
-def get_reminder_settings():
+def get_reminder_settings(filename: str = "data/reminders.txt"):
     # extract list of user-defined reminders
     user_reminders = []
-    with open('data/reminders.txt', 'r') as f:
+    with open(filename, 'r') as f:
         for scholarship in f:
             user_reminders.append(clean_string(scholarship))
     return user_reminders
 
 
-def must_send_reminder(communique: Communique) -> bool:
+def must_send_reminder(communique: Communique,
+                       reminder_settings: list[str]) -> bool:
     """Checks if a reminder must be sent for a given communique based on
     user-defined filtering options and closing date.
 
@@ -28,14 +29,13 @@ def must_send_reminder(communique: Communique) -> bool:
     """
 
     # if communique has no closing date, ignore
-    if len(communique.closing_date.strip()) == 0:
+    if len(clean_string(communique.closing_date)) == 0:
         return False
 
     # if user is not interested in current communique and user is
     # not interested in all scholarships, return false
-    user_reminders = get_reminder_settings()
-    if (communique.title not in user_reminders and
-            user_reminders[0] != '*'):
+    if (communique.title not in reminder_settings and
+            reminder_settings[0] != '*'):
         return False
 
     # at this point user is interested with current communique
@@ -49,12 +49,12 @@ def must_send_reminder(communique: Communique) -> bool:
 
     try:
         # convert closing date to a correct format and set timezone to MU
-        formatted_date = dparser.parse(
+        parsed_date = dparser.parse(
             communique.closing_date, fuzzy=True, default=MU_TIME)
     except Exception:  # skip dates which cannot be parsed
         return False
     else:
-        diff = (formatted_date - MU_TIME).days
+        diff = (parsed_date - MU_TIME).days
         if (diff < 0):  # closing date is in the past
             return False
         if (diff == DEADLINE_GAP):
@@ -73,16 +73,13 @@ def send_reminders(all_communiques: list[Communique]) -> None:
         NOTE: Do not pass a list of newly scraped
         communiques as deadlines for older communiques may have changed.
     """
+    settings = get_reminder_settings()
     # if reminder is disabled, do not send any
-    if (len(get_reminder_settings()) == 0):
+    if (len(settings) == 0):
         return
 
     emailer = Emailer()
     for current_communique in all_communiques:
-        if must_send_reminder(current_communique):
+        if must_send_reminder(current_communique, settings):
             emailer.send_reminder(current_communique.title)
     print(emailer.sent_count, "closing dates reminders were sent !")
-
-
-if __name__ == "__main__":
-    print(must_send_reminder(Communique("tets", "23 december 2023")))

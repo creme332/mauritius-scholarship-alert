@@ -61,8 +61,3 @@ def get_all_communiques(limit=-1) -> list[Communique]:
             return all_communiques
 
     return all_communiques
-
-
-if __name__ == "__main__":
-    a = get_all_communiques(3)
-    print([r.to_dict() for r in a])

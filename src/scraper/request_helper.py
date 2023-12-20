@@ -71,9 +71,3 @@ def request(url: str) -> requests.Response:
         raise SystemExit(
             f"Invalid status code when requesting PDF : {r.status_code}",
             f"\n URL : {url}")
-
-
-if __name__ == "__main__":
-    print(request(
-        'https://education.govmu.org/Pages/Downloads/'
-        'Scholarships/Scholarships-for-Mauritius-Students.aspx'))
