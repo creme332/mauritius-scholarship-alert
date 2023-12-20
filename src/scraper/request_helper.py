@@ -5,11 +5,11 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 
-async def request_all(url_list):
+async def request_all(url_list: list[str]) -> list[requests.Response]:
     """Uses asynchronous programming to make parallel requests to server.
 
     Args:
-        URL_list (list): A list of URLS which must be requested
+        url_list (list): A list of URLS which must be requested
 
     Returns:
         list: Corresponding list of responses
@@ -27,7 +27,21 @@ async def request_all(url_list):
     return responses
 
 
-def request(URL):
+def request(url: str) -> requests.Response:
+    """
+    Returns a response after requesting a URL.
+
+    Args:
+        url (str): A valid URL. Eg: `https://stackoverflow.com/`.
+
+    Raises:
+        SystemExit: Connection error.
+        SystemExit: Invalid status code.
+        SystemExit: Any other exceptions.
+
+    Returns:
+        requests.Response
+    """
     HEADERS = {
         'user-agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                        'AppleWebKit/537.36 (KHTML, like Gecko)'
@@ -46,17 +60,17 @@ def request(URL):
     session.mount('https://', adapter)
 
     try:
-        r = session.get(URL)
+        r = session.get(url)
     except requests.exceptions.ConnectionError as e:
-        raise SystemExit(f"Connection Error for {URL}", e)
+        raise SystemExit(f"Connection error for {url}", e)
     except Exception as e:
-        raise SystemExit(f"makeRequest({URL})failed. Exception :", e)
+        raise SystemExit(f"request({url})failed. Exception :", e)
     else:
         if (r.status_code == 200):  # valid response
             return r
         raise SystemExit(
             f"Invalid status code when requesting PDF : {r.status_code}",
-            f"\n URL : {URL}")
+            f"\n URL : {url}")
 
 
 if __name__ == "__main__":
