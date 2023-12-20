@@ -1,5 +1,5 @@
-# Update requirements.txt : python3 -m  pipreqs.pipreqs . --force
-# use  pip show <package> to check package version
+# To update requirements.txt: python3 -m  pipreqs.pipreqs . --force
+# To check package version: pip show <package_name>
 
 # to load environment variables
 python-dotenv==0.21.0
@@ -18,4 +18,7 @@ redmail==0.4.1
 
 # to work with dates and timezones
 pytz==2022.2.1
-python-dateutil==2.8.2      
+python-dateutil==2.8.2
+
+# for testing
+pytest==7.4.3
