@@ -1,6 +1,7 @@
 import PyPDF2
 import io
-from request_helper import request
+from scraper.request_helper import request
+from requests import Response
 
 
 def clean_string(string: str) -> str:
@@ -26,7 +27,7 @@ def clean_string(string: str) -> str:
     return string.strip()
 
 
-def extract_text(response):
+def extract_text(pdf_response: Response) -> str:
     """Extract text from a PDF file
 
     Args:
@@ -35,16 +36,19 @@ def extract_text(response):
     Returns:
         string: A string with all text content in pdf
     """
-    PDF_text = ""
+    if pdf_response.status_code != 200:
+        return ""
 
-    with io.BytesIO(response.content) as open_pdf_file:
+    pdf_text = ""
+
+    with io.BytesIO(pdf_response.content) as open_pdf_file:
         reader = PyPDF2.PdfFileReader(open_pdf_file)
         page_count = reader.getNumPages()
 
         for pageNum in range(0, page_count):
             page = reader.pages[pageNum]
-            PDF_text += page.extract_text()
-    return PDF_text
+            pdf_text += page.extract_text()
+    return pdf_text
 
 
 def has_keyword(pdf_text: str) -> bool:
