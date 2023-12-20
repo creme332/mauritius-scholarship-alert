@@ -1,6 +1,7 @@
 from redmail import gmail
 from dotenv import load_dotenv, find_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
+from models.communique import Communique
 import os
 
 
@@ -32,10 +33,10 @@ class Emailer:
             autoescape=select_autoescape()
         )
 
-    def send_reminder(self, communique_name):
+    def send_reminder(self, communique: Communique):
         template = self.env.get_template("reminder.html")
 
-        if (len(communique_name.strip()) == 0):
+        if (len(communique.title.strip()) == 0):
             communique_name = "missing-name"
 
         html_body = template.render(
