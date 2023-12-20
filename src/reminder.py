@@ -3,11 +3,22 @@ import pytz
 from datetime import datetime
 from models.communique import Communique
 from emailer.emailer import Emailer
+from utils import clean_string
 DEADLINE_GAP = 3  # numbers of days before closing date to send reminder
 
 
+def get_reminder_settings():
+    # extract list of user-defined reminders
+    user_reminders = []
+    with open('data/reminders.txt', 'r') as f:
+        for scholarship in f:
+            user_reminders.append(clean_string(scholarship))
+    return user_reminders
+
+
 def must_send_reminder(communique: Communique) -> bool:
-    """Checks if a reminder must be sent for a given communique.
+    """Checks if a reminder must be sent for a given communique based on
+    user-defined filtering options and closing date.
 
     Args:
         communique (Communique): A Communique object.
@@ -20,18 +31,9 @@ def must_send_reminder(communique: Communique) -> bool:
     if len(communique.closing_date.strip()) == 0:
         return False
 
-    # extract list of user-defined communiques from scholarships.txt
-    user_reminders = []
-    with open('data/reminders.txt', 'r') as f:
-        for scholarship in f:
-            user_reminders.append(scholarship.strip())
-
-    # if file is empty, never send a reminder.
-    if len(user_reminders) == 0:
-        return False
-
     # if user is not interested in current communique and user is
     # not interested in all scholarships, return false
+    user_reminders = get_reminder_settings()
     if (communique.title not in user_reminders and
             user_reminders[0] != '*'):
         return False
@@ -61,9 +63,8 @@ def must_send_reminder(communique: Communique) -> bool:
 
 
 def send_reminders(all_communiques: list[Communique]) -> None:
-    """Sends reminders (if any) for active communiques. An active
-    communique is a communique currently displayed on the scholarship
-    website.
+    """Given a list of all communiques present on website,
+    this method sends reminders for valid communiques.
 
     Args:
         all_communiques (list[Communique]): A list of all communiques on
@@ -72,6 +73,10 @@ def send_reminders(all_communiques: list[Communique]) -> None:
         NOTE: Do not pass a list of newly scraped
         communiques as deadlines for older communiques may have changed.
     """
+    # if reminder is disabled, do not send any
+    if (len(get_reminder_settings()) == 0):
+        return
+
     emailer = Emailer()
     for current_communique in all_communiques:
         if must_send_reminder(current_communique):
