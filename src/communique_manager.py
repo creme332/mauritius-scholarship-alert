@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 import json
-
+from utils import clean_string
 from models.communique import Communique
 
 
@@ -62,23 +62,49 @@ class CommuniqueManager:
         """
         new_communiques = []
 
-        # read last scraped communique from file
-        last_scraped_communique = self.get_last_communique()
-
-        # if website is being scraped for the first time,
-        # last_scraped_communique will be None so all scraped communiques
-        # are new
-        if not last_scraped_communique:
-            return all_communiques
-
         # compare the last scraped communique with each communique
         # in all_communiques. keep only communiques which are found before
         # the last communique
         for communique in all_communiques:
-            if communique.title == last_scraped_communique.title:
+            if communique.is_last_scraped_communique():
                 return new_communiques
             new_communiques.append(communique)
 
         # if last scraped communique is not present on website,
         # there is a problem which requires manual verification
         raise SystemExit("Last scraped communique is missing from website.")
+
+    def get_user_interests(filename: str = 'data/interests.txt') -> list[str]:
+        """
+        Returns a list of user interests in lowercase.
+
+        Args:
+            filename (str, optional): _description_.
+            Defaults to 'data/interests.txt'.
+
+        Returns:
+            list[str]: _description_
+        """
+        interests = []
+        with open(filename, 'r') as f:
+            for keyword in f:
+                keyword = clean_string(keyword).lower()
+                interests.append(keyword)
+        return interests
+
+    def get_reminder_settings(filename: str = "data/reminders.txt"):
+        """
+        Get list of user-defined important communiques
+
+        Args:
+            filename (str, optional): _description_.
+            Defaults to "data/reminders.txt".
+
+        Returns:
+            _type_: list of user-defined reminders
+        """
+        user_reminders = []
+        with open(filename, 'r') as f:
+            for scholarship in f:
+                user_reminders.append(clean_string(scholarship))
+        return user_reminders
