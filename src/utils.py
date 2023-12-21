@@ -43,7 +43,7 @@ def extract_text(pdf_response: Response) -> str:
 
     with io.BytesIO(pdf_response.content) as open_pdf_file:
         reader = PdfReader(open_pdf_file)
-        page_count = reader.getNumPages()
+        page_count = len(reader.pages)
 
         for pageNum in range(0, page_count):
             page = reader.pages[pageNum]
