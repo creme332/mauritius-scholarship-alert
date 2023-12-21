@@ -8,7 +8,7 @@ SCHOLARSHIP_URL = BASE_URL + ("/Pages/Downloads/Scholarships"
                               "/Scholarships-for-Mauritius-Students.aspx")
 
 
-def get_all_communiques(limit=-1) -> list[Communique]:
+def get_all_communiques(limit=0) -> list[Communique]:
     """
     Returns a list of all communiques found on the scholarship website.
 
@@ -16,11 +16,13 @@ def get_all_communiques(limit=-1) -> list[Communique]:
 
     Args:
         limit (int, optional): Maximum number of communiques to be
-        returned. Defaults to -1 which means no limit.
+        returned. Defaults to 0 which means no limit.
 
     Returns:
         list[Communique]: A list of communique objects.
     """
+    if limit < 0:
+        raise SystemExit("Invalid limit of communiques.")
     all_communiques = []
     soup = BeautifulSoup(request(SCHOLARSHIP_URL).text, 'lxml')
     table_rows = soup.find('table').find_all('tr')
