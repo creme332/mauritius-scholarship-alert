@@ -25,5 +25,8 @@ jobs:
       - name: install any new dependencies
         run: pip install -r requirements.txt
 
-      - name: run tests
+      - name: Run tests
+        env:
+          EMAIL_PASSCODE: ${{ secrets.EMAIL_PASSCODE }}
+          SENDER_EMAIL_ADDRESS: ${{ secrets.SENDER_EMAIL_ADDRESS }}
         run: pytest
