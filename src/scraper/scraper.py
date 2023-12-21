@@ -51,10 +51,14 @@ def get_all_communiques(limit=0) -> list[Communique]:
         if (current_communique.title == ""):
             current_communique.title = clean_string(columns[0].text)
 
-        # create list of links present in first column
+        # create list of links present in first column of current row
         all_anchor_tags = columns[0].find_all('a')
+        all_urls = []
         for tag in all_anchor_tags:
-            current_communique.urls.append(BASE_URL + tag['href'])
+            url = BASE_URL + tag['href']
+            if url not in all_urls:  # prevent duplicates
+                all_urls.append(url)
+        current_communique.urls = all_urls
 
         all_communiques.append(current_communique)
 
