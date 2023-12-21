@@ -2,7 +2,7 @@ from src.scraper.scraper import get_all_communiques
 import pytest
 
 
-@pytest.mark.skip(reason="no need to repeatedly to make request to server")
+# @pytest.mark.skip(reason="no need to repeatedly to make request to server")
 class TestScraper:
     def test_default_limit(self):
         x = get_all_communiques()
