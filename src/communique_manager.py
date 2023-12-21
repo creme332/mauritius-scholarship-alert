@@ -10,12 +10,22 @@ class CommuniqueManager:
         self.file_name = file_name
 
     def get_last_communique(self) -> Communique | None:
+        """
+        Returns the communique which was scraped the last time the program
+        was run. This communique is saved in `data/scrape.json`.
+
+        Returns:
+            Communique | None: If scraping is now taking place for the
+            first time, return None. Else return a Communique object.
+        """
         # ! file is guaranteed to contain at least an empty dictionary
         last_scraped_communique = None
 
         with open(self.file_name, 'r') as f:
             try:
                 x = json.load(f)
+                # check if data is a non-empty dictionary before
+                # converting to Communique
                 if x:
                     last_scraped_communique = Communique(
                         x['title'], x['closing_date'], x['urls'])
@@ -43,10 +53,12 @@ class CommuniqueManager:
         not encountered the last time the website was scraped.
 
         Args:
-            all_communiques (list[Communique]): _description_
+            all_communiques (list[Communique]): A list of communiques scraped
+            from website. List is ordered by closing date since website is
+            scraped from top to bottom.
 
         Returns:
-            list[Communique]: _description_
+            list[Communique]: New communiques discovered
         """
         new_communiques = []
 
@@ -67,4 +79,6 @@ class CommuniqueManager:
                 return new_communiques
             new_communiques.append(communique)
 
-        return new_communiques
+        # if last scraped communique is not present on website,
+        # there is a problem which requires manual verification
+        raise SystemExit("Last scraped communique is missing from website.")
