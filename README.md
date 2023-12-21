@@ -1,5 +1,6 @@
 # 🔔 mauritius-scholarship-alert
-![Build status of workflow](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/main.yml/badge.svg)
+![Scraper status badge](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/main.yml/badge.svg)
+[![Run tests](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/test.yml/badge.svg)](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/test.yml)
 
 ![mauritius scholarship alert logo](assets/logo.png)
 
@@ -12,7 +13,7 @@ The current government website, as of 2024, lacks an email subscription or an RS
 - Communique PDF included as email attachment
 - Deadline reminders
 - Filtering options
-- Asynchronous programming for fast web scraping.
+- Asynchronous programming for fast web scraping
 - Tested with pytest
 
 ## How it works
@@ -26,16 +27,20 @@ The current government website, as of 2024, lacks an email subscription or an RS
 
 
 ## To-do
-- [ ] if website was an issue, save html of website to a file
-- [ ] add images of email template to readme
-- [ ] Test filter
-- [ ] add image extraction with pypdf: https://github.com/py-pdf/pypdf/issues/2256
+- [ ] write tests 
+  - [ ] utils
+  - [ ] reminder module. do not write tests for communique class
+- [ ] create RSS feed feed.xml in python
+- [ ] add delay between each email sent
+- [ ] Test filter.txt
+- [ ] add image extraction with pypdf:
+  - [ ] https://github.com/py-pdf/pypdf/issues/2256
   - [ ] https://red-mail.readthedocs.io/en/v0.1.1/tutorials/body_content.html
   - [ ] https://www.developer.com/languages/displaying-and-converting-images-with-python/
 - [ ] Build an API in express
 - [ ] add excalidraw diagram explaining how it works
+- [ ] add screenshots of email template to readme
 - [ ] Create a registration form so that anyone can subscribe for updates.
-- [ ] update requirements.txt for all packages
 
 ## Changelog
 - [x] use node 16 in github actions
