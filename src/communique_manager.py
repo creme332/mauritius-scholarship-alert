@@ -45,8 +45,9 @@ class CommuniqueManager:
             json.dump(new_communique.to_dict(), f,
                       ensure_ascii=False, indent=4)
 
-    def filter_new(self,
-                   all_communiques: list[Communique]) -> list[Communique]:
+    def get_new_communiques(
+            self,
+            all_communiques: list[Communique]) -> list[Communique]:
         """
         Given a list of communiques scraped from top to bottom of website,
         return the communiques which were
