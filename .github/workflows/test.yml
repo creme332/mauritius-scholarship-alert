@@ -19,6 +19,9 @@ jobs:
           python-version: "3.9"
           cache: "pip"
 
+      - name: upgrade pip
+        run: pip install --upgrade pip
+
       - name: install any new dependencies
         run: pip install -r requirements.txt
 
