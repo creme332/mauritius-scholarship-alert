@@ -1,6 +1,5 @@
 from pypdf import PdfReader
 import io
-from scraper.request_helper import request
 from requests import Response
 
 
@@ -49,38 +48,3 @@ def extract_text(pdf_response: Response) -> str:
             page = reader.pages[pageNum]
             pdf_text += page.extract_text()
     return pdf_text
-
-
-def has_keyword(pdf_text: str) -> bool:
-    """Returns True if text contains at least 1 keyword from `filters.txt` or
-    `filters.txt` file is empty.
-
-    Args:
-        pdf_text (str): A string of text content in a PDF
-
-    Returns:
-        bool
-    """
-    # Replace U+2019 char with '
-    pdf_text = pdf_text.replace('’', "'")
-
-    line_count = 0
-    with open('data/filters.txt', 'r') as f:
-        for keyword in f:
-            line_count += 1
-            if keyword.strip().lower() in pdf_text.lower().split(' '):
-                return True
-    if line_count == 0:
-        return True
-    return False
-
-
-if __name__ == "__main__":
-    test = ['\u200bSTATE', 'OF', 'MAURITIUS',
-            'POSTGRADUATE', 'SCHOLARSHIP', 'SCHEME', '2022/2023']
-    print(clean_string(' '.join(test)))
-
-    URL = ('https://education.govmu.org/Documents/2022/scholarship/'
-           'Communique-UK%20Commonwealth.doc.pdf')
-    txt = extract_text(request(URL))
-    print(has_keyword(txt))
