@@ -50,11 +50,14 @@ def main() -> None:
 
     print("Done.")
 
+    # get user interests
+    user_interests = CommuniqueManager().get_user_interests()
+
     # For send emails
     print("Sending email...")
     emailer = Emailer()
     for i in range(0, min(emailer.EMAIL_LIMIT, len(new_communiques))):
-        if new_communiques[i].match_user_interests():
+        if new_communiques[i].match_user_interests(user_interests):
             emailer.send_new_scholarship(new_communiques[i], pdfs_text[i])
 
     print("Done.")

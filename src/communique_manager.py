@@ -6,8 +6,12 @@ from models.communique import Communique
 
 
 class CommuniqueManager:
-    def __init__(self, file_name="data/scrape.json"):
-        self.file_name = file_name
+    def __init__(self, past_communique_filename="data/scrape.json",
+                 interests_filename="data/interests.txt",
+                 reminder_filename="data/reminders.txt"):
+        self.interests_filename = interests_filename
+        self.past_communique_filename = past_communique_filename
+        self.reminder_filename = reminder_filename
 
     def get_last_communique(self) -> Communique | None:
         """
@@ -21,7 +25,7 @@ class CommuniqueManager:
         # ! file is guaranteed to contain at least an empty dictionary
         last_scraped_communique = None
 
-        with open(self.file_name, 'r') as f:
+        with open(self.past_communique_filename, 'r') as f:
             try:
                 x = json.load(f)
                 # check if data is a non-empty dictionary before
@@ -41,7 +45,7 @@ class CommuniqueManager:
             new_communique (Communique): The most recently recently scraped
             communique
         """
-        with open(self.file_name, 'w', encoding='utf-8') as f:
+        with open(self.past_communique_filename, 'w', encoding='utf-8') as f:
             json.dump(new_communique.to_dict(), f,
                       ensure_ascii=False, indent=4)
 
@@ -62,12 +66,13 @@ class CommuniqueManager:
             list[Communique]: New communiques discovered
         """
         new_communiques = []
+        last_scraped_communique = self.get_last_communique()
 
         # compare the last scraped communique with each communique
         # in all_communiques. keep only communiques which are found before
         # the last communique
         for communique in all_communiques:
-            if communique.is_last_scraped_communique():
+            if communique.title == last_scraped_communique.title:
                 return new_communiques
             new_communiques.append(communique)
 
@@ -75,7 +80,7 @@ class CommuniqueManager:
         # there is a problem which requires manual verification
         raise SystemExit("Last scraped communique is missing from website.")
 
-    def get_user_interests(filename: str = 'data/interests.txt') -> list[str]:
+    def get_user_interests(self) -> list[str]:
         """
         Returns a list of user interests in lowercase.
 
@@ -87,13 +92,13 @@ class CommuniqueManager:
             list[str]: _description_
         """
         interests = []
-        with open(filename, 'r') as f:
+        with open(self.interests_filename, 'r') as f:
             for keyword in f:
                 keyword = clean_string(keyword).lower()
                 interests.append(keyword)
         return interests
 
-    def get_reminder_settings(filename: str = "data/reminders.txt"):
+    def get_reminder_settings(self):
         """
         Get list of user-defined important communiques
 
@@ -105,7 +110,7 @@ class CommuniqueManager:
             _type_: list of user-defined reminders
         """
         user_reminders = []
-        with open(filename, 'r') as f:
+        with open(self.reminder_filename, 'r') as f:
             for scholarship in f:
                 user_reminders.append(clean_string(scholarship))
         return user_reminders

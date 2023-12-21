@@ -1,5 +1,4 @@
 import datetime
-from communique_manager import CommuniqueManager
 from utils import clean_string
 import dateutil.parser as dparser
 import pytz
@@ -50,17 +49,6 @@ class Communique:
     def match_reminder_settings(self,
                                 important_communiques: list[str]) -> bool:
         return self.title in important_communiques
-
-    def is_last_scraped_communique(self):
-        last_communique = CommuniqueManager().get_last_communique()
-
-        # TODO: take into consideration closing date
-        # if last communique undefined, return true.
-        # else if communique matches the title of the last communique,
-        # return true
-        return ((not last_communique) or
-                (clean_string(self.title)
-                 == clean_string(last_communique.title)))
 
     def get_days_from_deadline(self) -> int:
         """

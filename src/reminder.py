@@ -5,7 +5,8 @@ from utils import clean_string
 DEADLINE_GAP = 3  # numbers of days before closing date to send reminder
 
 
-def must_send_reminder(communique: Communique) -> bool:
+def must_send_reminder(communique: Communique,
+                       reminder_settings: list[str]) -> bool:
     """Checks if a reminder must be sent for a given communique.
 
     Args:
@@ -19,12 +20,12 @@ def must_send_reminder(communique: Communique) -> bool:
     if len(clean_string(communique.closing_date)) == 0:
         return False
 
-    # if user is not interested in current communique, ignore
-    if not communique.match_user_interests():
+    # if user has not defined current communique in reminder settings,
+    # ignore
+    if not communique.match_reminder_settings(reminder_settings):
         return False
 
-    # at this point user is interested with current communique
-
+    # at this point user is interested with current communique.
     # decide if it is the right time to send the reminder
     try:
         if (communique.get_days_from_deadline() == DEADLINE_GAP):
@@ -45,13 +46,14 @@ def handle_reminders(all_communiques: list[Communique]) -> None:
         NOTE: Do not pass a list of newly scraped
         communiques as deadlines for older communiques may have changed.
     """
-    settings = CommuniqueManager().get_reminder_settings()
+    reminder_settings = CommuniqueManager().get_reminder_settings()
+
     # if reminder is disabled, do not send any
-    if (len(settings) == 0):
+    if (len(reminder_settings) == 0):
         return
 
     emailer = Emailer()
     for current_communique in all_communiques:
-        if must_send_reminder(current_communique, settings):
+        if must_send_reminder(current_communique,  reminder_settings):
             emailer.send_reminder(current_communique)
     print(emailer.sent_count, "reminders were sent !")
