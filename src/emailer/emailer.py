@@ -33,17 +33,21 @@ class Emailer:
             autoescape=select_autoescape()
         )
 
-    def send_reminder(self, communique: Communique):
+    def _get_reminder_template(self, communique: Communique):
         template = self.env.get_template("reminder.html")
 
         if (len(communique.title.strip()) == 0):
-            communique_name = "missing-name"
+            communique.title = "missing-title"
 
-        html_body = template.render(
-            communique_name=communique_name,
+        return template.render(
+            title=communique.title,
+            urls=communique.urls,
+            closing_date=communique.closing_date,
         )
 
-        self._send_email("Scholarship Deadline", html_body)
+    def send_reminder(self, communique: Communique):
+        self._send_email("Scholarship Deadline",
+                         self._get_reminder_template(communique))
 
     def send_new_scholarship(self, communique_name, communique_text):
         if (len(communique_name.strip()) == 0):
