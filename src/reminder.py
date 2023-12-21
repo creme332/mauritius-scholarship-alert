@@ -11,6 +11,8 @@ def must_send_reminder(communique: Communique,
 
     Args:
         communique (Communique): A Communique object.
+        reminder_settings (list[str]): A list of communique titles set by user
+        for deadline reminder.
 
     Returns:
         bool: True if a reminder must be sent
@@ -25,8 +27,8 @@ def must_send_reminder(communique: Communique,
     if not communique.match_reminder_settings(reminder_settings):
         return False
 
-    # at this point user is interested with current communique.
-    # decide if it is the right time to send the reminder
+    # at this point user wants to be notified of deadline of current
+    # communique. decide if it is the right time to send the reminder
     try:
         if (communique.get_days_from_deadline() == DEADLINE_GAP):
             return True
@@ -34,10 +36,11 @@ def must_send_reminder(communique: Communique,
         return False
 
 
-def handle_reminders(all_communiques: list[Communique]) -> None:
-    """Given a list of all communiques present on website,
+def handle_reminders(all_communiques: list[Communique]) -> int:
+    """Given a list of all communiques present on the website,
     this method sends reminders for communiques whose deadline
-    is approaching.
+    is close. The "closeness" of the deadline is determined by
+    DEADLINE_GAP.
 
     Args:
         all_communiques (list[Communique]): A list of all communiques on
@@ -45,6 +48,9 @@ def handle_reminders(all_communiques: list[Communique]) -> None:
 
         NOTE: Do not pass a list of newly scraped
         communiques as deadlines for older communiques may have changed.
+
+    Returns:
+        int -> Number of reminders sent
     """
     reminder_settings = CommuniqueManager().get_reminder_settings()
 
@@ -56,4 +62,4 @@ def handle_reminders(all_communiques: list[Communique]) -> None:
     for current_communique in all_communiques:
         if must_send_reminder(current_communique,  reminder_settings):
             emailer.send_reminder(current_communique)
-    print(emailer.sent_count, "reminders were sent !")
+    return emailer.sent_count

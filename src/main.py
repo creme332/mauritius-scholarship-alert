@@ -11,6 +11,9 @@ MANAGER = CommuniqueManager()
 
 
 def main() -> None:
+    """
+    Driver function for program.
+    """
     global MANAGER
 
     # fetch all communiques from website
@@ -19,9 +22,11 @@ def main() -> None:
     print("Done.")
 
     # send reminders if any
-    handle_reminders(all_communiques)
+    print("Sending reminders...")
+    reminders_count = handle_reminders(all_communiques)
+    print(f"Done. {reminders_count} reminders sent.")
 
-    # filter out communiques which were already scraped before
+    # remove communiques which were already scraped before
     # to get only new communiques
     new_communiques = MANAGER.get_new_communiques(all_communiques)
 
@@ -31,7 +36,7 @@ def main() -> None:
     if (len(new_communiques) == 0):
         return
 
-    print("Fetching PDF of each communique...")
+    print("Processing PDF of each communique...")
 
     # each communique has at least 1 pdf
     # extract first pdf url for each communiques

@@ -9,6 +9,18 @@ class CommuniqueManager:
     def __init__(self, past_communique_filename="data/scrape.json",
                  interests_filename="data/interests.txt",
                  reminder_filename="data/reminders.txt"):
+        """
+        Initializes path to files.
+
+        Args:
+            past_communique_filename (str, optional): filaname where last
+            scraped communique is stored. Defaults to "data/scrape.json".
+            interests_filename (str, optional): filename where user interests
+            are defined. Defaults to "data/interests.txt".
+            reminder_filename (str, optional): filename where user defined 
+            communiques with important deadlines.
+            Defaults to "data/reminders.txt".
+        """
         self.interests_filename = interests_filename
         self.past_communique_filename = past_communique_filename
         self.reminder_filename = reminder_filename
@@ -98,16 +110,13 @@ class CommuniqueManager:
                 interests.append(keyword)
         return interests
 
-    def get_reminder_settings(self):
+    def get_reminder_settings(self) -> list[str]:
         """
         Get list of user-defined important communiques
 
-        Args:
-            filename (str, optional): _description_.
-            Defaults to "data/reminders.txt".
-
         Returns:
-            _type_: list of user-defined reminders
+            list[str]: list of user-defined communiques with
+            important deadlines
         """
         user_reminders = []
         with open(self.reminder_filename, 'r') as f:
