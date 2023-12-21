@@ -82,8 +82,6 @@ class TestCommuniqueManager:
         (['last'], []),
         (['com1', 'com2', 'last', 'com3', 'com4'], ['com1', 'com2']),
         (['com1', 'com2', 'last'], ['com1', 'com2']),
-        (['com1', 'com2', 'com3'], ['com1', 'com2', 'com3']),
-
     ])
     def test_filter_for_nonempty_lsc(self, all_coms, expected_coms):
         """
@@ -106,3 +104,18 @@ class TestCommuniqueManager:
         result_titles = [c.title for c in result]
 
         assert set(result_titles) == set(expected_coms)
+
+    def test_lst_missing_from_website(self):
+        # write last communique to file
+        last_scraped_communique = Communique("last")
+        CommuniqueManager(DATA_PATH).save(last_scraped_communique)
+
+        all_coms = ['com1', 'com2', 'com3']
+        # create an array of communiques
+        all_communique_array = [Communique(title) for title in all_coms]
+
+        # filter out old communiques
+        with pytest.raises(
+                SystemExit,
+                match="Last scraped communique is missing from website."):
+            CommuniqueManager(DATA_PATH).filter_new(all_communique_array)
