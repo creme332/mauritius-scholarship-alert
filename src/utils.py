@@ -1,14 +1,14 @@
-import PyPDF2
+from pypdf import PdfReader
 import io
 from scraper.request_helper import request
 from requests import Response
 
 
 def clean_string(string: str) -> str:
-    """Removes special characters like line feed, zero width space, ...
-        from a string.
+    """Removes special characters like line feed and zero width space
+    from a string.
     Args:
-        name (str): original scholarship name directly from html
+        string (str): string
 
     Returns:
         str: Clean string
@@ -42,7 +42,7 @@ def extract_text(pdf_response: Response) -> str:
     pdf_text = ""
 
     with io.BytesIO(pdf_response.content) as open_pdf_file:
-        reader = PyPDF2.PdfFileReader(open_pdf_file)
+        reader = PdfReader(open_pdf_file)
         page_count = reader.getNumPages()
 
         for pageNum in range(0, page_count):

@@ -62,9 +62,10 @@ def must_send_reminder(communique: Communique,
     return False
 
 
-def send_reminders(all_communiques: list[Communique]) -> None:
+def handle_reminders(all_communiques: list[Communique]) -> None:
     """Given a list of all communiques present on website,
-    this method sends reminders for valid communiques.
+    this method sends reminders for communiques whose deadline
+    is approaching.
 
     Args:
         all_communiques (list[Communique]): A list of all communiques on
@@ -82,4 +83,4 @@ def send_reminders(all_communiques: list[Communique]) -> None:
     for current_communique in all_communiques:
         if must_send_reminder(current_communique, settings):
             emailer.send_reminder(current_communique.title)
-    print(emailer.sent_count, "closing dates reminders were sent !")
+    print(emailer.sent_count, "reminders were sent !")
