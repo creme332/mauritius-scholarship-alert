@@ -6,18 +6,18 @@ from emailer.emailer import Emailer
 from reminder import handle_reminders
 from scraper.scraper import get_all_communiques
 from scraper.request_helper import request_all
-# * Uncomment lines below to measure code performance
-# import cProfile
-# import pstats
 
 MANAGER = CommuniqueManager()
 
 
 def main() -> None:
     global MANAGER
-    # fetch all communiques from website
-    all_communiques = get_all_communiques()
 
+    # fetch all communiques from website
+    print("Fetching all communiques")
+    all_communiques = get_all_communiques()
+    print("Done.")
+    
     # send reminders if any
     handle_reminders(all_communiques)
 
@@ -31,6 +31,8 @@ def main() -> None:
     if (len(new_communiques) == 0):
         return
 
+    print("Fetching PDF...")
+
     # * NOTE: each communique has at least 1 url
     # extract first url for each communiques
     pdf_urls = [c.urls[0] for c in new_communiques]
@@ -41,12 +43,17 @@ def main() -> None:
     # get the pdf text from each response
     pdfs_text = [extract_text(r) for r in pdf_responses]
 
+    print("Done.")
+
     # For newly discovered scholarships, send emails
+    print("Sending email...")
     emailer = Emailer()
     for i in range(0, min(emailer.EMAIL_LIMIT, len(new_communiques))):
         if (pdf_responses[i].status_code == 200 and
                 has_keyword(pdfs_text[i])):
             emailer.send_new_scholarship(new_communiques[i], pdfs_text[i])
+
+    print("Done.")
     print(emailer.sent_count, "scholarship emails were sent!")
 
     # update last scraped communique
@@ -55,10 +62,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    # * Uncomment lines below to measure code performance
-    # with cProfile.Profile() as pr:
-    #     main()
-
-    # stats = pstats.Stats(pr)
-    # stats.sort_stats(pstats.SortKey.TIME)
-    # stats.print_stats()
