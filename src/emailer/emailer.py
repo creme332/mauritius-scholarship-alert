@@ -33,7 +33,7 @@ class Emailer:
             autoescape=select_autoescape()
         )
 
-    def _get_reminder_template(self, communique: Communique):
+    def _get_reminder_template(self, communique: Communique) -> str:
         template = self.env.get_template("reminder.html")
 
         if (len(communique.title.strip()) == 0):
@@ -45,25 +45,33 @@ class Emailer:
             closing_date=communique.closing_date,
         )
 
-    def send_reminder(self, communique: Communique):
+    def send_reminder(self, communique: Communique) -> None:
         self._send_email("Scholarship Deadline",
                          self._get_reminder_template(communique))
 
-    def send_new_scholarship(self, communique_name, communique_text):
-        if (len(communique_name.strip()) == 0):
-            communique_name = "missing-name"
+    def _get_scholarship_template(self,
+                                  communique: Communique,
+                                  pdf_extract: str) -> str:
+        if (len(communique.title.strip()) == 0):
+            communique.title = "missing-name"
 
-        if (len(communique_text.strip()) == 0):
-            communique_text = "No text found in PDF. PDF may contain an image."
+        if (len(pdf_extract.strip()) == 0):
+            pdf_extract = "No text found in PDF. PDF may contain an image."
 
         template = self.env.get_template("scholarship.html")
-        html_body = template.render(
-            communique_name=communique_name,
-            communique_text=communique_text,
+        return template.render(
+            name=communique.title,
+            urls=communique.urls,
+            pdf_extract=pdf_extract,
         )
-        self._send_email(communique_name, html_body)
 
-    def _send_email(self, subject, html_body, receivers=[]):
+    def send_new_scholarship(self, communique: Communique,
+                             pdf_extract: str) -> None:
+        self._send_email(communique.title, self._get_scholarship_template(
+            communique, pdf_extract))
+
+    def _send_email(self, subject: str, html_body: str,
+                    receivers: list[str] = []) -> None:
         if (self.sent_count >= self.EMAIL_LIMIT):
             raise SystemExit("Email Limit Exceeded")
 
@@ -80,9 +88,3 @@ class Emailer:
         except Exception as e:
             raise SystemExit(e)
         self.sent_count = self.sent_count + 1
-
-
-if __name__ == "__main__":
-    emailer = Emailer()
-    emailer.send_reminder("Test Scholarship")
-    emailer.send_new_scholarship("Test Communique", "")
