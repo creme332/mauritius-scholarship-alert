@@ -13,6 +13,7 @@ The current government website, as of 2024, lacks an email subscription or an RS
 - Deadline reminders
 - Filtering options
 - Asynchronous programming for fast web scraping.
+- Tested with pytest
 
 ## How it works
 1. A scheduled CRON job runs a web scraper on a daily basis.
@@ -22,34 +23,26 @@ The current government website, as of 2024, lacks an email subscription or an RS
 
 ## Limitations
 - Any images in the PDF will not be included in the email notification.
-- If you set your repository to private, Github Actions will give you only 2000 execution minutes per month. A public Github repository has no such limit. 
-- The `main.py` script has a run duration of **25-60 seconds** on the  Ubuntu 2-core runner provided by Github.
 
-For updated information about quotas :
-- [Github Actions Quotas](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions)
-- [Gmail Quotas](https://support.google.com/a/answer/166852?hl=en)
 
 ## To-do
-    DEFAULT_GAP = 3  # numbers of days before closing date to send reminder
-- [ ] Add type hinting to all functions
 - [ ] if website was an issue, save html of website to a file
-- [ ]create new branch and update implementation
-- [ ] Fix empty email issue: Grant from Austria has an image embeded in pdf
-- [ ] add images of email template
-- [ ] rename text file to filters
-- [ ] Send PDF file as email attachment: https://dev.to/seraph776/download-pdf-files-using-python-4064
-
-- [ ] Add unit tests + possibly a separate workflow
+- [ ] add images of email template to readme
+- [ ] Test filter
+- [ ] add image extraction with pypdf: https://github.com/py-pdf/pypdf/issues/2256
+  - [ ] https://red-mail.readthedocs.io/en/v0.1.1/tutorials/body_content.html
+  - [ ] https://www.developer.com/languages/displaying-and-converting-images-with-python/
 - [ ] Build an API in express
-- [ ] If communique missing, do not use old one.
 - [ ] add excalidraw diagram explaining how it works
-- [ ] create a simple website
 - [ ] Create a registration form so that anyone can subscribe for updates.
+- [ ] update requirements.txt for all packages
 
 ## Changelog
 - [x] use node 16 in github actions
 - [x] Followed PEP8 convention
-- [x] Added `docs`
+- [x] Added `docs` + pydocs
+- [x] Add tests + workflow
+- [x] Upgraded packages to fix security vulnerabilities
 - [x] Re-structured project
 ## License
 This project uses the MIT license.
