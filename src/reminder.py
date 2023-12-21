@@ -1,25 +1,12 @@
-import dateutil.parser as dparser
-import pytz
-from datetime import datetime
 from models.communique import Communique
+from communique_manager import CommuniqueManager
 from emailer.emailer import Emailer
 from utils import clean_string
 DEADLINE_GAP = 3  # numbers of days before closing date to send reminder
 
 
-def get_reminder_settings(filename: str = "data/reminders.txt"):
-    # extract list of user-defined reminders
-    user_reminders = []
-    with open(filename, 'r') as f:
-        for scholarship in f:
-            user_reminders.append(clean_string(scholarship))
-    return user_reminders
-
-
-def must_send_reminder(communique: Communique,
-                       reminder_settings: list[str]) -> bool:
-    """Checks if a reminder must be sent for a given communique based on
-    user-defined filtering options and closing date.
+def must_send_reminder(communique: Communique) -> bool:
+    """Checks if a reminder must be sent for a given communique.
 
     Args:
         communique (Communique): A Communique object.
@@ -32,34 +19,18 @@ def must_send_reminder(communique: Communique,
     if len(clean_string(communique.closing_date)) == 0:
         return False
 
-    # if user is not interested in current communique and user is
-    # not interested in all scholarships, return false
-    if (communique.title not in reminder_settings and
-            reminder_settings[0] != '*'):
+    # if user is not interested in current communique, ignore
+    if not communique.match_user_interests():
         return False
 
     # at this point user is interested with current communique
 
     # decide if it is the right time to send the reminder
-
-    # Note : Timezone on ubuntu server is different from timezone in MU
-    # Get current time in mauritius timezone
-    MU_TIMEZONE = pytz.timezone('Indian/Mauritius')
-    MU_TIME = datetime.now(MU_TIMEZONE)
-
     try:
-        # convert closing date to a correct format and set timezone to MU
-        parsed_date = dparser.parse(
-            communique.closing_date, fuzzy=True, default=MU_TIME)
+        if (communique.get_days_from_deadline() == DEADLINE_GAP):
+            return True
     except Exception:  # skip dates which cannot be parsed
         return False
-    else:
-        diff = (parsed_date - MU_TIME).days
-        if (diff < 0):  # closing date is in the past
-            return False
-        if (diff == DEADLINE_GAP):
-            return True
-    return False
 
 
 def handle_reminders(all_communiques: list[Communique]) -> None:
@@ -74,7 +45,7 @@ def handle_reminders(all_communiques: list[Communique]) -> None:
         NOTE: Do not pass a list of newly scraped
         communiques as deadlines for older communiques may have changed.
     """
-    settings = get_reminder_settings()
+    settings = CommuniqueManager().get_reminder_settings()
     # if reminder is disabled, do not send any
     if (len(settings) == 0):
         return
@@ -82,5 +53,5 @@ def handle_reminders(all_communiques: list[Communique]) -> None:
     emailer = Emailer()
     for current_communique in all_communiques:
         if must_send_reminder(current_communique, settings):
-            emailer.send_reminder(current_communique.title)
+            emailer.send_reminder(current_communique)
     print(emailer.sent_count, "reminders were sent !")
