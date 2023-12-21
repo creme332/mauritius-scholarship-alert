@@ -46,8 +46,8 @@ class Emailer:
         )
 
     def send_reminder(self, communique: Communique) -> None:
-        self._send_email("Scholarship Deadline",
-                         self._get_reminder_template(communique))
+        template = self._get_reminder_template(communique)
+        self._send_email("Scholarship Deadline", template)
 
     def _get_scholarship_template(self,
                                   communique: Communique,
@@ -67,8 +67,9 @@ class Emailer:
 
     def send_new_scholarship(self, communique: Communique,
                              pdf_extract: str) -> None:
-        self._send_email(communique.title, self._get_scholarship_template(
-            communique, pdf_extract))
+        template = self._get_scholarship_template(
+            communique, pdf_extract)
+        self._send_email(communique.title, template)
 
     def _send_email(self, subject: str, html_body: str,
                     receivers: list[str] = []) -> None:
