@@ -1,16 +1,17 @@
 # 🔔 mauritius-scholarship-alert
 ![Scraper status badge](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/main.yml/badge.svg)
 [![Run tests](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/test.yml/badge.svg)](https://github.com/creme332/mauritius-scholarship-alert/actions/workflows/test.yml)
-
-![mauritius scholarship alert logo](assets/logo.png)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Get notified by email each time a new scholarship communique is posted on the [Ministry of Education of Mauritius website](https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx).
 
-The current government website, as of 2024, lacks an email subscription or an RSS feed or an API, requiring manual checks for new scholarship updates. This tool eliminates this hassle by automatically sending you an email notification whenever a scholarship is posted. Additionally, it offers advanced features beyond a standard RSS feed, including customizable filtering options and deadline reminders.
+The current government website unfortunately lacks an email subscription, an RSS feed, and an API, requiring manual checks for new scholarship updates. This tool eliminates this hassle by automatically sending you an email notification whenever a scholarship is posted. Additionally, it offers advanced features beyond a standard RSS feed, including customizable filtering options and deadline reminders.
+
+To get started, check out the [documentation](docs).
 
 ## Features
+- Dynamic Atom feed
 - Customizable email template
-- Communique PDF included as email attachment
 - Deadline reminders
 - Filtering options
 - Asynchronous programming for fast web scraping
@@ -27,12 +28,7 @@ The current government website, as of 2024, lacks an email subscription or an RS
 
 
 ## To-do
-- [ ] write tests 
-  - [ ] utils
-  - [ ] reminder module. do not write tests for communique class
-- [ ] create RSS feed feed.xml in python
 - [ ] add delay between each email sent
-- [ ] Test filter.txt
 - [ ] add image extraction with pypdf:
   - [ ] https://github.com/py-pdf/pypdf/issues/2256
   - [ ] https://red-mail.readthedocs.io/en/v0.1.1/tutorials/body_content.html
@@ -45,9 +41,9 @@ The current government website, as of 2024, lacks an email subscription or an RS
 ## Changelog
 - [x] use node 16 in github actions
 - [x] Followed PEP8 convention
-- [x] Added `docs` + pydocs
+- [x] type annotations
+- [x] Added `docs` pydocs
 - [x] Add tests + workflow
 - [x] Upgraded packages to fix security vulnerabilities
 - [x] Re-structured project
-## License
-This project uses the MIT license.
+- [x] rss feed
