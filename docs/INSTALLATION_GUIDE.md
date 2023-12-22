@@ -1,14 +1,17 @@
 # Installation Guide
 - [Installation Guide](#installation-guide)
-  - [For personal use](#for-personal-use)
+  - [Using Github Actions](#using-github-actions)
     - [Prerequisites](#prerequisites)
     - [Instructions](#instructions)
-  - [For local development](#for-local-development)
+  - [Using RSS/Atom reader](#using-rssatom-reader)
     - [Prerequisites](#prerequisites-1)
     - [Instructions](#instructions-1)
+  - [For local development](#for-local-development)
+    - [Prerequisites](#prerequisites-2)
+    - [Instructions](#instructions-2)
   - [Testing](#testing)
 
-## For personal use
+## Using Github Actions
 Follow the instructions in this section if you only want to use the tool without installing the project locally. 
 
 ### Prerequisites
@@ -24,6 +27,17 @@ Follow the instructions in this section if you only want to use the tool without
 4. Everything is now setup and the scraper will run automatically through Github Actions.
 > 🔴 **Note**: Never use your gmail account password as the `EMAIL_PASSCODE` even though it works. The value `EMAIL_PASSCODE` must not be shared with anyone and must not be present in the code.
 
+## Using RSS/Atom reader
+Use this method if you only want to be notified of new communiques. This method
+does not support advanced features such as filtering options and deadline reminders.
+
+### Prerequisites
+- A RSS/Atom feed reader (examples: [Mozilla Thunderbird](https://blog.thunderbird.net/2022/05/thunderbird-rss-feeds-guide-favorite-content-to-the-inbox/), [FeedBro](https://chromewebstore.google.com/detail/feedbro/mefgmmbdailogpfhfblcnnjfmnpnmdfa) browser extension, ...)
+### Instructions
+Add the following URL to your feed reader:
+```
+https://creme332.github.io/mauritius-scholarship-alert/feed.xml
+```
 ## For local development
 ### Prerequisites
 - Python 3.9
