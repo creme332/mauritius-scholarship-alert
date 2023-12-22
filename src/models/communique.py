@@ -31,9 +31,9 @@ class Communique:
         Returns:
             bool: True if condition satisfied.
         """
-        # Replace U+2019 char with normal apostrophe and
+        # Replace with normal apostrophe and
         # convert to lowercase
-        formatted_title = self.title.replace('’', "'").lower()
+        lowercase_title = clean_string(self.title).lower()
 
         # check if no interests were defined
         if len(interests) == 0:
@@ -43,7 +43,7 @@ class Communique:
             return True
 
         for interest in interests:
-            if interest.lower() in formatted_title:
+            if interest.lower() in lowercase_title:
                 return True
         return False
 

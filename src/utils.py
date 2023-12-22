@@ -16,12 +16,14 @@ def clean_string(string: str) -> str:
     LF_CHAR = u'\n'  # line feed
     EOL_CHAR = u'\r\n'  # end of line
     ZERO_WIDTH_SPACE = u'\u200b'
+    U2019CHAR = '’'  # U+2019 char.
 
     string = (string.strip()
               .replace(EOL_CHAR, ' ')
               .replace(NON_BREAK_SPACE_CHAR, ' ')
               .replace(ZERO_WIDTH_SPACE, '')
               .replace(LF_CHAR, '')
+              .replace(U2019CHAR, "'")  # replace with normal apostrophe
               )
     return string.strip()
 
