@@ -6,11 +6,11 @@ import os
 
 
 class Emailer:
-    def __init__(self):
+    def __init__(self) -> None:
         # define maximum number of emails that can be sent
         # per program execution
-        self.EMAIL_LIMIT = 5  # ! change this value at your own risk
-        self.sent_count = 0  # number of emails sent
+        self.EMAIL_LIMIT: int = 5  # ! change this value at your own risk
+        self.sent_count: int = 0  # number of emails sent
 
         load_dotenv(find_dotenv())
 
