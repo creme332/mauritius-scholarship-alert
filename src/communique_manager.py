@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from utils import clean_string
 from models.communique import Communique
+import os.path
 
 
 class CommuniqueManager:
@@ -13,17 +14,23 @@ class CommuniqueManager:
         Initializes path to files.
 
         Args:
-            past_communique_filename (str, optional): filaname where last
+            past_communique_filename (str, optional): filename where last
             scraped communique is stored. Defaults to "data/scrape.json".
             interests_filename (str, optional): filename where user interests
             are defined. Defaults to "data/interests.txt".
-            reminder_filename (str, optional): filename where user defined 
+            reminder_filename (str, optional): filename where user defined
             communiques with important deadlines.
             Defaults to "data/reminders.txt".
         """
         self.interests_filename = interests_filename
         self.past_communique_filename = past_communique_filename
         self.reminder_filename = reminder_filename
+
+        # validate file names
+        if (not os.path.isfile(self.past_communique_filename) or
+                not os.path.isfile(self.interests_filename) or
+                not os.path.isfile(self.reminder_filename)):
+            raise FileNotFoundError
 
     def get_last_communique(self) -> Communique | None:
         """
@@ -79,6 +86,11 @@ class CommuniqueManager:
         """
         new_communiques = []
         last_scraped_communique = self.get_last_communique()
+
+        # if last scraped communique does not exist, this means that
+        # the website was scraped for the first time
+        if not last_scraped_communique:
+            return all_communiques
 
         # compare the last scraped communique with each communique
         # in all_communiques. keep only communiques which are found before
