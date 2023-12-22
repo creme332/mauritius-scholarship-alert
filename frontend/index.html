@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="An open-source email notification system for scholarships for Mauritian students."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/axist@latest/dist/axist.min.css"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔔</text></svg>"
+    />
+    <title>Mauritius Scholarship Alert</title>
+  </head>
+
+  <body>
+    <main>
+      <h1 href="#top">Mauritius Scholarship Alert</h1>
+      <p>
+        An
+        <a href="https://github.com/creme332/mauritius-scholarship-alert"
+          >open-source</a
+        >
+        email notification system for scholarship communiques posted on the
+        <a
+          href="https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx"
+        >
+          Ministry of Education of Mauritius website </a
+        >.
+      </p>
+      <h2>Why?</h2>
+      <p>
+        The scholarship website lacks an email subscription, RSS feed, and API,
+        requiring manual checks for new scholarship updates. This tool
+        eliminates this hassle by automatically sending you an email
+        notification whenever a scholarship is posted. Additionally, it offers
+        advanced features beyond a standard RSS/Atom feed, including
+        customizable filtering options and deadline reminders.
+      </p>
+      <h2>Features</h2>
+      <ul>
+        <li>Dynamic RSS/Atom feed</li>
+        <li>Customizable email templates</li>
+        <li>Filtering options</li>
+        <li>Deadline reminders</li>
+      </ul>
+
+      <h2>Usage</h2>
+      <h3>With Github Actions</h3>
+      <p>
+        This is the recommended approach to use all the features available. The
+        latest instructions on how to use this project are available
+        <a
+          href="https://github.com/creme332/mauritius-scholarship-alert/blob/main/docs/INSTALLATION_GUIDE.md"
+          >here.</a
+        >
+      </p>
+      <h3>With RSS/Atom reader</h3>
+      <p>
+        The easiest way to get notified when a new scholarship is posted is to
+        use our RSS/Atom feed. Examples of free RSS/Atom readers are FeedBro and
+        Mozilla Thunderbird. Then, add the following URL to your RSS/Atom
+        reader:
+      </p>
+      <code
+        >https://creme332.github.io/mauritius-scholarship-alert/feed.xml</code
+      >
+      <p></p>
+      <p>
+        However, this method
+        <mark> does not support advanced features</mark> such as filtering
+        options and deadline reminders.
+      </p>
+    </main>
+    <footer>
+      <p>
+        <span style="float: left"
+          >© 2023 <a href="https://creme332.vercel.app/">creme332</a></span
+        >
+        <a style="float: right" href="#top">Go to top</a>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <id>https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx</id>
+  <title>Scholarships for Mauritius Students</title>
+  <updated>2023-12-22T16:29:02.977188+00:00</updated>
+  <author>
+    <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+    <email>moeps@govmu.org</email>
+  </author>
+  <link href="https://creme332.github.io/mauritius-scholarship-alert/feed.xml" rel="self"/>
+  <contributor>
+    <name>creme332</name>
+    <email>c34560814@gmail.com</email>
+  </contributor>
+  <generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator>
+  <subtitle>A list of scholarships for Mauritian students</subtitle>
+  <entry>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/Communique_Digital_Technology_2023.pdf</id>
+    <title>POSTGRADUATE SCHOLARSHIP SCHEME IN DIGITAL TECHNOLOGIES 2023/2024</title>
+    <updated>2023-12-22T16:29:02.978586+00:00</updated>
+    <author>
+      <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+      <email>moeps@govmu.org</email>
+    </author>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/Communique_Digital_Technology_2023.pdf" rel="alternate" type="application/pdf"/>
+    <summary> 
+1 COMMUNIQUE  
+ 
+POSTGRADUATE  SCHOLARSHIP  SCHEME  IN DIGITAL  TECHNOLOGIES  2023/202 4 
+ 
+Applications are invited from suitably qualified Mauritian candidates for scholarships offered by 
+the Government of Mauritius under the Postgraduate Schola...</summary>
+  </entry>
+  <entry>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/Communique%20-%20Quebec%20Part%20Cost%20%28Winter%29.pdf</id>
+    <title>COMMUNIQUE - QUEBEC PART-COST</title>
+    <updated>2023-12-22T16:29:02.978060+00:00</updated>
+    <author>
+      <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+      <email>moeps@govmu.org</email>
+    </author>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/Communique%20-%20Quebec%20Part%20Cost%20%28Winter%29.pdf" rel="alternate" type="application/pdf"/>
+    <summary>1 
+  
+COMMUNIQUE  
+ 
+QUEBEC PART -COST SCHOLARSHIP SCHEME  
+ 
+Applications are invited from suitably qualified Mauritian Nationals for  
+part-cost scholarships tenable in a University in the province of Quebec  in 
+Canada, under the Quebec Part -Cost...</summary>
+  </entry>
+  <entry>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/Scholarship%20Austria%202024-25.pdf</id>
+    <title>COMMUNIQUE - OFFER OF GRANTS FROM AUSTRIA FOR 2024-2025</title>
+    <updated>2023-12-22T16:29:02.977326+00:00</updated>
+    <author>
+      <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+      <email>moeps@govmu.org</email>
+    </author>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/Scholarship%20Austria%202024-25.pdf" rel="alternate" type="application/pdf"/>
+    <summary>...</summary>
+  </entry>
+</feed>
