@@ -22,3 +22,6 @@ python-dateutil==2.8.2
 
 # for testing
 pytest==7.4.3
+
+# for feed
+feedgen==0.9.0
