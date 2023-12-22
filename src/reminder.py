@@ -56,7 +56,7 @@ def handle_reminders(all_communiques: list[Communique]) -> int:
 
     # if reminder is disabled, do not send any
     if (len(reminder_settings) == 0):
-        return
+        return 0
 
     emailer = Emailer()
     for current_communique in all_communiques:
