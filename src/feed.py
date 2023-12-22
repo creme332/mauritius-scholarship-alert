@@ -154,7 +154,10 @@ class Feed:
 
         # set some recommended elements
         fe.author(self.feed_author)
-        fe.summary(pdf_text[:100]+'...')
+
+        # set summary
+        summary = pdf_text.strip()[:250]+'...'
+        fe.summary(summary)
 
         # save main file
         fe.link(
