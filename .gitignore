@@ -17,3 +17,6 @@ venv.bak/
 
 # testing files which are modified by tests
 tests/data/scrape.json 
+tests/data/reminders.txt
+tests/data/interests.txt
+tests/data/feed.xml
