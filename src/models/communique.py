@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from utils import clean_string
 import dateutil.parser as dparser
 import pytz
@@ -15,7 +15,7 @@ class Communique:
 
         # save time at which object was created
         self.timestamp = ('{:%Y-%m-%d %H:%M:%S}'.
-                          format(datetime.datetime.now()))
+                          format(datetime.now()))
 
     def to_dict(self):
         return vars(self)
@@ -59,7 +59,12 @@ class Communique:
         Returns:
             bool: True if user wants to reminded of deadline of communique
         """
-        return self.title in important_communiques
+        # if no settings defined, return false
+        if len(important_communiques) == 0:
+            return False
+
+        return (important_communiques[0] == "*" or
+                self.title in important_communiques)
 
     def get_days_from_deadline(self) -> int:
         """
