@@ -7,22 +7,22 @@ from reminder import handle_reminders
 from scraper.scraper import get_all_communiques
 from scraper.request_helper import request_all
 
-MANAGER = CommuniqueManager()
-
 
 def main() -> None:
     """
     Driver function for program.
     """
-    global MANAGER
+    MANAGER = CommuniqueManager()
 
     # fetch all communiques from website
-    print("Fetching all communiques")
+    print("Fetching all communiques...")
     all_communiques = get_all_communiques()
-    print("Done.")
+    print(f"Done. {len(all_communiques)} communiques found:")
+    print("\n".join([c.title for c in all_communiques[:5]]))
+    print("...")
 
     # send reminders if any
-    print("Sending reminders...")
+    print("Checking for reminders...")
     reminders_count = handle_reminders(all_communiques)
     print(f"Done. {reminders_count} reminders sent.")
 
@@ -30,7 +30,7 @@ def main() -> None:
     # to get only new communiques
     new_communiques = MANAGER.get_new_communiques(all_communiques)
 
-    print("Number of new communiques found =", len(new_communiques))
+    print(f"{len(new_communiques)} new communiques found.")
 
     # if no new communiques found, exit
     if (len(new_communiques) == 0):
@@ -53,10 +53,10 @@ def main() -> None:
 
     assert (len(pdf_urls) == len(pdfs_text))
 
-    print("Done.")
+    print(f"Done. {len(pdfs_text)} PDFs extracted.")
 
     # get user interests
-    user_interests = CommuniqueManager().get_user_interests()
+    user_interests = MANAGER.get_user_interests()
 
     # For send emails
     print("Sending email...")
@@ -65,8 +65,7 @@ def main() -> None:
         if new_communiques[i].match_user_interests(user_interests):
             emailer.send_new_scholarship(new_communiques[i], pdfs_text[i])
 
-    print("Done.")
-    print(emailer.sent_count, "scholarship emails were sent!")
+    print(f"Done. {emailer.sent_count} scholarship emails were sent!")
 
     # update last scraped communique
     MANAGER.save(new_communiques[0])
