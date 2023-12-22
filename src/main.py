@@ -1,11 +1,11 @@
 import asyncio
-
 from communique_manager import CommuniqueManager
 from utils import extract_text
 from emailer.emailer import Emailer
 from reminder import handle_reminders
 from scraper.scraper import get_all_communiques
 from scraper.request_helper import request_all
+from feed import Feed
 
 
 def main() -> None:
@@ -69,6 +69,18 @@ def main() -> None:
 
     # update last scraped communique
     MANAGER.save(new_communiques[0])
+
+    # update feed
+    print("Updating feed...")
+    feed_manager = Feed()
+    for i in range(0, len(new_communiques)):
+        feed_manager.add_entry(new_communiques[i], pdfs_text[i])
+    print(f"Done. Feed size is {feed_manager.get_total_feed_entries()}")
+
+    # delete all feed entries
+    print("Deleting old feed entries...")
+    feed_manager.delete_old_entries()
+    print(f"Done. Feed size is {feed_manager.get_total_feed_entries()}")
 
 
 if __name__ == "__main__":
