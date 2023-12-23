@@ -46,7 +46,7 @@ class TestCommuniqueManager:
             CommuniqueManager("/ile.tx", INTEREST_DATA_PATH,
                               REMINDERS_DATA_PATH)
 
-    def test_read_empty_scraped_file(self, manager):
+    def test_read_empty_scraped_file(self, manager: CommuniqueManager):
         # clear file contents
         open(SCRAPED_DATA_PATH, 'w').close()
 
@@ -54,7 +54,7 @@ class TestCommuniqueManager:
         x = manager.get_last_communique()
         assert x is None
 
-    def test_read_file_with_empty_dict(self, manager):
+    def test_read_file_with_empty_dict(self, manager: CommuniqueManager):
         # write
         with open(SCRAPED_DATA_PATH, 'w') as f:
             f.write('{}')
@@ -63,7 +63,7 @@ class TestCommuniqueManager:
         x = manager.get_last_communique()
         assert x is None
 
-    def test_rw_normal_communique(self, manager):
+    def test_rw_normal_communique(self, manager: CommuniqueManager):
         write_communique = Communique("Communique test",
                                       "12 December 2023", ["a.com", "b.com"])
         # write communique
@@ -74,7 +74,7 @@ class TestCommuniqueManager:
 
         assert read_communique.to_dict() == write_communique.to_dict()
 
-    def test_rw_communique_without_urls(self, manager):
+    def test_rw_communique_without_urls(self, manager: CommuniqueManager):
         write_communique = Communique("Communique test",
                                       "12 December 2023")
         # write communique
@@ -85,7 +85,7 @@ class TestCommuniqueManager:
 
         assert read_communique.to_dict() == write_communique.to_dict()
 
-    def test_rw_empty_communique(self, manager):
+    def test_rw_empty_communique(self, manager: CommuniqueManager):
         write_communique = Communique()
         # write communique
         manager.save(write_communique)
@@ -95,7 +95,8 @@ class TestCommuniqueManager:
 
         assert read_communique.to_dict() == write_communique.to_dict()
 
-    def test_get_new_communiques_when_scrape_empty(self, manager):
+    def test_get_new_communiques_when_scrape_empty(self,
+                                                   manager: CommuniqueManager):
         """
         Test get_new_communiques() when last scraped communique is empty.
         Expected result is that no communiques are removed.
@@ -134,7 +135,7 @@ class TestCommuniqueManager:
 
         assert set(result_titles) == set(expected_coms)
 
-    def test_lst_missing_from_website(self, manager):
+    def test_lst_missing_from_website(self, manager: CommuniqueManager):
         # write last communique to file
         last_scraped_communique = Communique("last")
         manager.save(last_scraped_communique)
@@ -150,13 +151,13 @@ class TestCommuniqueManager:
             manager.get_new_communiques(
                 all_communique_array)
 
-    def test_read_empty_reminder_file(self, manager):
+    def test_read_empty_reminder_file(self, manager: CommuniqueManager):
         # clear file contents
         open(REMINDERS_DATA_PATH, 'w').close()
 
         assert len(manager.get_reminder_settings()) == 0
 
-    def test_read_normal_reminder_file(self, manager):
+    def test_read_normal_reminder_file(self, manager: CommuniqueManager):
         reminders = ["com1", "com2", "COM3"]
         # save new settings to reminder
         with open(REMINDERS_DATA_PATH, "w") as f:
@@ -165,13 +166,13 @@ class TestCommuniqueManager:
         result = manager.get_reminder_settings()
         assert set(result) == set(reminders)
 
-    def test_read_empty_interests_file(self, manager):
+    def test_read_empty_interests_file(self, manager: CommuniqueManager):
         # clear file contents
         open(INTEREST_DATA_PATH, 'w').close()
 
         assert len(manager.get_user_interests()) == 0
 
-    def read_normal_interests_file(self, manager):
+    def read_normal_interests_file(self, manager: CommuniqueManager):
         # clear file contents
         open(INTEREST_DATA_PATH, 'w').close()
 
