@@ -9,7 +9,31 @@ on:
     - cron: "0 */12 * * *" # Every 12 hours
 
 jobs:
-  scrape:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+      - name: setup python with pip cache
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: "pip"
+
+      - name: upgrade pip
+        run: pip install --upgrade pip
+
+      - name: install any new dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          EMAIL_PASSCODE: ${{ secrets.EMAIL_PASSCODE }}
+          SENDER_EMAIL_ADDRESS: ${{ secrets.SENDER_EMAIL_ADDRESS }}
+        run: pytest
+  find-scholarships:
+    needs: run-tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo content
@@ -47,8 +71,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
-  generate-atom-feed:
-    needs: scrape
+  deploy-atom-feed:
+    needs: [run-tests, find-scholarships]
     runs-on: ubuntu-latest
     permissions:
       contents: write
