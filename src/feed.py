@@ -78,7 +78,8 @@ class Feed:
     def _load_generator(self) -> None:
         """
         Fetches generator object from file and saves it to
-        class variable.
+        class variable. If no generator found in file, a new one is
+        created
         """
         try:
             with open(self.generator_file_path, 'rb') as f:
@@ -144,6 +145,8 @@ class Feed:
             communique (Communique): Communique to be saved.
             pdf_text (_type_): _description_
         """
+        assert len(communique.urls) > 0
+        
         # create entry object
         fe = self.fg.add_entry()
 
