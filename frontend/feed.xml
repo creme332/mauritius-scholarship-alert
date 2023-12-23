@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <id>https://education.govmu.org/Pages/Downloads/Scholarships/Scholarships-for-Mauritius-Students.aspx</id>
   <title>Scholarships for Mauritius Students</title>
-  <updated>2023-12-22T16:29:02.977188+00:00</updated>
+  <updated>2023-12-23T09:48:15.527890+00:00</updated>
   <author>
     <name>Ministry of Education, Tertiary Education, Science and Technology</name>
     <email>moeps@govmu.org</email>
@@ -15,26 +15,20 @@
   <generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator>
   <subtitle>A list of scholarships for Mauritian students</subtitle>
   <entry>
-    <id>https://education.govmu.org/Documents/2023/Scholarship/Communique_Digital_Technology_2023.pdf</id>
-    <title>POSTGRADUATE SCHOLARSHIP SCHEME IN DIGITAL TECHNOLOGIES 2023/2024</title>
-    <updated>2023-12-22T16:29:02.978586+00:00</updated>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/Scholarship%20Austria%202024-25.pdf</id>
+    <title>COMMUNIQUE - OFFER OF GRANTS FROM AUSTRIA FOR 2024-2025</title>
+    <updated>2023-12-23T09:48:21.620879+00:00</updated>
     <author>
       <name>Ministry of Education, Tertiary Education, Science and Technology</name>
       <email>moeps@govmu.org</email>
     </author>
-    <link href="https://education.govmu.org/Documents/2023/Scholarship/Communique_Digital_Technology_2023.pdf" rel="alternate" type="application/pdf"/>
-    <summary> 
-1 COMMUNIQUE  
- 
-POSTGRADUATE  SCHOLARSHIP  SCHEME  IN DIGITAL  TECHNOLOGIES  2023/202 4 
- 
-Applications are invited from suitably qualified Mauritian candidates for scholarships offered by 
-the Government of Mauritius under the Postgraduate Schola...</summary>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/Scholarship%20Austria%202024-25.pdf" rel="alternate" type="application/pdf"/>
+    <summary>...</summary>
   </entry>
   <entry>
     <id>https://education.govmu.org/Documents/2023/Scholarship/Communique%20-%20Quebec%20Part%20Cost%20%28Winter%29.pdf</id>
     <title>COMMUNIQUE - QUEBEC PART-COST</title>
-    <updated>2023-12-22T16:29:02.978060+00:00</updated>
+    <updated>2023-12-23T09:48:21.619220+00:00</updated>
     <author>
       <name>Ministry of Education, Tertiary Education, Science and Technology</name>
       <email>moeps@govmu.org</email>
@@ -51,14 +45,54 @@ part-cost scholarships tenable in a University in the province of Quebec  in
 Canada, under the Quebec Part -Cost...</summary>
   </entry>
   <entry>
-    <id>https://education.govmu.org/Documents/2023/Scholarship/Scholarship%20Austria%202024-25.pdf</id>
-    <title>COMMUNIQUE - OFFER OF GRANTS FROM AUSTRIA FOR 2024-2025</title>
-    <updated>2023-12-22T16:29:02.977326+00:00</updated>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/Communique_Digital_Technology_2023.pdf</id>
+    <title>POSTGRADUATE SCHOLARSHIP SCHEME IN DIGITAL TECHNOLOGIES 2023/2024</title>
+    <updated>2023-12-23T09:48:21.617590+00:00</updated>
     <author>
       <name>Ministry of Education, Tertiary Education, Science and Technology</name>
       <email>moeps@govmu.org</email>
     </author>
-    <link href="https://education.govmu.org/Documents/2023/Scholarship/Scholarship%20Austria%202024-25.pdf" rel="alternate" type="application/pdf"/>
-    <summary>...</summary>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/Communique_Digital_Technology_2023.pdf" rel="alternate" type="application/pdf"/>
+    <summary>1 COMMUNIQUE  
+ 
+POSTGRADUATE  SCHOLARSHIP  SCHEME  IN DIGITAL  TECHNOLOGIES  2023/202 4 
+ 
+Applications are invited from suitably qualified Mauritian candidates for scholarships offered by 
+the Government of Mauritius under the Postgraduate Scholars...</summary>
+  </entry>
+  <entry>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/Communique_IORA_BANGLADESH.pdf</id>
+    <title>IORA - MASTER'S SCHOLARSHIP FROM UNIVERSITY OF DHAKA, BANGLADESH IN OCEANOGRAPHY AND DISASTER SCIENCE &amp; CLIMATE RESILIENCE</title>
+    <updated>2023-12-23T09:48:21.616228+00:00</updated>
+    <author>
+      <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+      <email>moeps@govmu.org</email>
+    </author>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/Communique_IORA_BANGLADESH.pdf" rel="alternate" type="application/pdf"/>
+    <summary>1 COMMUNIQUE  
+IORA  - MASTER ’S SCHOLARSHIP FROM UNIVERSITY OF DHAKA, 
+BANGLADESH  IN OCEANOGRAPHY AND DISASTER SCIENCE &amp; CLIMATE 
+RESILIENCE  
+ 
+The University  of Dhaka , Bangladesh, is offering  scholarship s for a Master’s program me in  
+ Ocean...</summary>
+  </entry>
+  <entry>
+    <id>https://education.govmu.org/Documents/2023/Scholarship/The_People%27s_Democtratic_Republic_Algeria.pdf</id>
+    <title>COMMUNIQUE- OFFER OF SCHOLARSHIPS FROM THE PEOPLE'S DEMOCRATIC REPUBLIC OF ALGERIA FOR ACADEMIC YEAR 2023-2024</title>
+    <updated>2023-12-23T09:48:21.612452+00:00</updated>
+    <author>
+      <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+      <email>moeps@govmu.org</email>
+    </author>
+    <link href="https://education.govmu.org/Documents/2023/Scholarship/The_People%27s_Democtratic_Republic_Algeria.pdf" rel="alternate" type="application/pdf"/>
+    <summary>1 COMMUNIQUE  
+ 
+OFFER OF SC HOLARSHIPS FROM THE PEOPLE'S DEMOCRATIC REPUBLIC OF 
+ALGERIA  FOR ACADEMIC YEAR 2023-2024 
+ 
+ 
+Applications are invited from suitably qualified Mauritian Nationals  for the award of 
+scholarships offered by the  Ministry ...</summary>
   </entry>
 </feed>
