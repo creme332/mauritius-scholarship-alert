@@ -57,6 +57,9 @@ class CommuniqueManager:
             except json.decoder.JSONDecodeError:
                 return None
 
+    def reset_last_communique(self) -> None:
+        open(self.past_communique_filename, 'w').close()
+
     def save(self, new_communique: Communique):
         """Saves the most recently scraped communique to `scrape.json`
 
