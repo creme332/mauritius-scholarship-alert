@@ -19,11 +19,40 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔔</text></svg>"
     />
     <title>Mauritius Scholarship Alert</title>
+    <style>
+      :root {
+        --primary: #eb0303;
+      }
+      p > a {
+        font-weight: 600;
+      }
+      .title-link,
+      .title-link:hover {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .title::before {
+        content: "# ";
+        color: var(--primary);
+      }
+
+      .title:hover {
+        color: #494949;
+      }
+
+      footer {
+        margin-top: 2rem;
+        padding: 1rem 0;
+      }
+    </style>
   </head>
 
   <body>
     <main>
-      <h1 href="#top">Mauritius Scholarship Alert</h1>
+      <h1 href="#top">
+        <a class="title-link" href="#top">Mauritius Scholarship Alert</a>
+      </h1>
       <p>
         An
         <a href="https://github.com/creme332/mauritius-scholarship-alert"
@@ -36,49 +65,67 @@
           Ministry of Education of Mauritius website </a
         >.
       </p>
-      <h2>Why?</h2>
-      <p>
-        The scholarship website lacks an email subscription, RSS feed, and API,
-        requiring manual checks for new scholarship updates. This tool
-        eliminates this hassle by automatically sending you an email
-        notification whenever a scholarship is posted. Additionally, it offers
-        advanced features beyond a standard RSS/Atom feed, including
-        customizable filtering options and deadline reminders.
-      </p>
-      <h2>Features</h2>
-      <ul>
-        <li>Dynamic RSS/Atom feed</li>
-        <li>Customizable email templates</li>
-        <li>Filtering options</li>
-        <li>Deadline reminders</li>
-      </ul>
+      <section id="why">
+        <h2 class="title"><a class="title-link" href="#why">Why?</a></h2>
+        <p>
+          The scholarship website lacks an email subscription, RSS feed, and
+          API, requiring manual checks for new scholarship updates. This tool
+          eliminates this hassle by automatically sending you an email
+          notification whenever a scholarship is posted. Additionally, it offers
+          advanced features beyond a standard RSS/Atom feed, including
+          customizable filtering options and deadline reminders.
+        </p>
+      </section>
 
-      <h2>Usage</h2>
-      <h3>With Github Actions</h3>
-      <p>
-        This is the recommended approach to use all the features available. The
-        latest instructions on how to use this project are available
-        <a
-          href="https://github.com/creme332/mauritius-scholarship-alert/blob/main/docs/INSTALLATION_GUIDE.md"
-          >here.</a
-        >
-      </p>
-      <h3>With RSS/Atom reader</h3>
-      <p>
-        The easiest way to get notified when a new scholarship is posted is to
-        use our RSS/Atom feed. Examples of free RSS/Atom readers are FeedBro and
-        Mozilla Thunderbird. Then, add the following URL to your RSS/Atom
-        reader:
-      </p>
-      <code
-        >https://creme332.github.io/mauritius-scholarship-alert/feed.xml</code
-      >
-      <p></p>
-      <p>
-        However, this method
-        <mark> does not support advanced features</mark> such as filtering
-        options and deadline reminders.
-      </p>
+      <section id="features">
+        <h2 class="title">
+          <a class="title-link" href="#features">Features</a>
+        </h2>
+
+        <ul>
+          <li>Dynamic RSS/Atom feed</li>
+          <li>Customizable email templates</li>
+          <li>Filtering options</li>
+          <li>Deadline reminders</li>
+        </ul>
+      </section>
+
+      <section id="usage">
+        <h2 class="title"><a class="title-link" href="#usage">Usage</a></h2>
+
+        <section id="with_github">
+          <h3 class="title" href="#with_github">
+            <a class="title-link" href="#with_github">With Github</a>
+          </h3>
+          <p>
+            This is the recommended approach to use all the features available.
+            The latest instructions on how to use this project are available
+            <a
+              href="https://github.com/creme332/mauritius-scholarship-alert/blob/main/docs/INSTALLATION_GUIDE.md"
+              >here.</a
+            >
+          </p>
+        </section>
+        <section id="with_feed">
+          <h3 class="title" href="#with_feed">
+            <a class="title-link" href="#with_feed">With RSS/Atom reader</a>
+          </h3>
+          <p>
+            The easiest way to get notified when a new scholarship is posted is
+            to use our RSS/Atom feed. Examples of free RSS/Atom readers are
+            FeedBro and Mozilla Thunderbird. Then, add the following URL to your
+            RSS/Atom reader:
+          </p>
+          <pre>
+https://creme332.github.io/mauritius-scholarship-alert/feed.xml</pre
+          >
+          <p>
+            However, this method
+            <mark> does not support advanced features</mark> such as filtering
+            options and deadline reminders.
+          </p>
+        </section>
+      </section>
     </main>
     <footer>
       <p>
