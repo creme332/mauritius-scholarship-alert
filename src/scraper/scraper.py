@@ -24,7 +24,13 @@ def get_all_communiques(limit=0) -> list[Communique]:
     if limit < 0:
         raise SystemExit("Invalid limit of communiques.")
     all_communiques = []
-    soup = BeautifulSoup(request(SCHOLARSHIP_URL).text, 'lxml')
+    website_html = request(SCHOLARSHIP_URL).text  # HTML code of website
+    soup = BeautifulSoup(website_html, 'lxml')
+
+    if not soup.find('table'):
+        print(website_html)
+        raise SystemExit("Website missing table tag")
+
     table_rows = soup.find('table').find_all('tr')
 
     for row in table_rows:
