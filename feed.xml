@@ -15,6 +15,24 @@
   <generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator>
   <subtitle>A list of scholarships for Mauritian students</subtitle>
   <entry>
+    <id>https://education.govmu.org/Documents/2024/SCHOLARSHIP/Kit-bourse%202024%20bourses%20excellence%20et%20m%c3%a9rite.pdf</id>
+    <title>COMMUNIQUE - Bourses d'Enseignement supérieur du Gouvernement français Programme de bourses d'excellence et de  mérite.</title>
+    <updated>2024-03-28T12:32:16.617403+00:00</updated>
+    <author>
+      <name>Ministry of Education, Tertiary Education, Science and Technology</name>
+      <email>moeps@govmu.org</email>
+    </author>
+    <link href="https://education.govmu.org/Documents/2024/SCHOLARSHIP/Kit-bourse%202024%20bourses%20excellence%20et%20m%c3%a9rite.pdf" rel="alternate" type="application/pdf"/>
+    <link href="https://education.govmu.org/Documents/2024/SCHOLARSHIP/Dossier%20de%20candidature%202024%20bourses%20excellence%20et%20m%c3%a9rite.pdf" rel="related" type="application/pdf"/>
+    <summary>KIT D’INFORMATION  
+BOURSES D’ENSEIGNEME NT SUPERIEUR DU GOUV ERNEMENT FRANCAIS  
+ 
+1  
+Les bourses du Gouvernement  français (BGF)  seront 
+prioritairement accor dées aux can didats s’engageant dans 
+l’une des filières suivantes au niveau du Master ...</summary>
+  </entry>
+  <entry>
     <id>https://education.govmu.org/Documents/2024/SCHOLARSHIP/SCHOLARSHIPS%20FOR%20HINDI%20COURSES%20OFFERED%20BY.pdf</id>
     <title>COMMUNIQUE - SCHOLARSHIPS FOR HINDI COURSES OFFERED BY KENDRIYA HINDI SANSTHAN – INDIA 2024</title>
     <updated>2024-03-15T12:30:01.922532+00:00</updated>
